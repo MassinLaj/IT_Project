@@ -1,11 +1,11 @@
 # IT_Project
-#Klas
+# Klas
 G_1PRO_D4
 
-#Groep:
+# Groep:
 Internationaal
 
-#Leden:
+# Leden:
         -Dzhavatkhanov Junus
         -Equarqoune Sakina 
         -Barshigov Ruslan
