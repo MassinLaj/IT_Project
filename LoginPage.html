@@ -1,43 +1,47 @@
 <!DOCTYPE html>
 <html lang="nl-BE">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="Style.css">
-        <title>Login Page</title>
-    </head>
-    <body>
-        <form action="action_page.php" method="post">
-            <div class="imgcontainer">
-              <img src="img_avatar2.png" alt="Avatar" class="avatar">
-            </div>
-          
-            <div class="container"> 
-              <label for="uname"><b>Username</b></label>
-              <div class="centreren"> 
-              <input type="text" placeholder="Enter Username" name="uname" required>
-                 </div>
-              <label for="psw"><b>Password</b></label>
-              <div class="centreren"> 
-              <input type="password" placeholder="Enter Password" name="psw" required>
-              </div>
-                <div class="centreren">
-              <button type="submit">Login</button>
-            </div>
-              <label>
-                <div class="centreren"> 
-                <input type="checkbox" checked="checked" name="remember"> Remember me
-                </div>
-            </label>
-            </div>
-          
-            <div class="container" style="background-color:#f1f1f1">
-                <div class="centreren"> 
-              <button type="button" class="cancelbtn">Cancel</button>
-                </div>
-              <span class="psw">Forgot <a href="#">password?</a></span>
-            </div>
-          </form>
-       
-    </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>Login Page</title>
+</head>
+
+<body>
+  <div class="form">
+    <form action="action_page.php" method="post">
+      <div class="imgcontainer">
+        <img src="img_avatar2.png" alt="Avatar" class="avatar">
+      </div>
+
+      <div class="container">
+        <label for="uname"><b>Username</b></label>
+        <div class="centreren">
+          <input type="text" placeholder="Enter Username" name="uname" required>
+        </div>
+        <label for="psw"><b>Password</b></label>
+        <div class="centreren">
+          <input type="password" placeholder="Enter Password" name="psw" required>
+        </div>
+        <div class="centreren">
+          <button type="submit">Login</button>
+        </div>
+        <label>
+          <div class="centreren">
+            <input type="checkbox" checked="checked" name="remember"> Remember me
+          </div>
+        </label>
+      </div>
+
+      <div class="container" style="background-color:#f1f1f1">
+        <div class="centreren">
+          <button type="button" class="cancelbtn">Cancel</button>
+        </div>
+        <span class="psw">Forgot <a href="#">password?</a></span>
+      </div>
+    </form>
+  </div>
+</body>
+
 </html>
