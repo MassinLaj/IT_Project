@@ -1,11 +1,11 @@
 .form {
     display:flex;
     justify-content: center;
-    border: 3px solid #228B22;
+    border: 3px solid #505c68;
   }
 
 body {
-  background-color: #CD7F32;
+  background-color: #6f8ea3;
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -19,7 +19,7 @@ input[type=text], input[type=password] {
 }
 
 button {
-  background-color: #4a4300 ;
+  background-color: #393834 ;
   color: white;
   padding: 14px 20px;
   margin: 8px 0;
