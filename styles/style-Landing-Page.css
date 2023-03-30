@@ -1,5 +1,5 @@
 body{
-  background-color: #6f8ea3;
+  background-color: #505c68;
 }
 
 h1 {
@@ -30,8 +30,12 @@ h1 {
   object-fit: cover;
 }
 .blur-button-lotr:hover img {
-  filter: blur(8px);
-  transition-duration: 0.7s;
+  filter: blur(3px);
+  transition-duration: 0.4s;
+}
+.button-fifa:hover img {
+  filter: blur(3px);
+  transition-duration: 0.4s;
 }
 
 .button-container {
@@ -68,5 +72,15 @@ button:hover {
   background-color: #555;
   color: #fff;
   transform: scale(1.1);
+}
+
+.button-fifa img {
+  border-radius: 8px;
+  position: relative;
+  top: -1px;
+  left: -6px;
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
 }
 
