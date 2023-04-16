@@ -1,5 +1,5 @@
 body {
-  background-color: #393834;
+  background-color: #e2ded6;
   font-family: Arial, Helvetica, sans-serif;
   display: flex;
   height: 100%;
@@ -11,7 +11,7 @@ body {
 .form {
   border: 3px solid #505c68;
   margin: auto;
-  background-color: #6f8ea3;
+  background-color: #e2ded6;
 }
 
 input[type=text],
@@ -45,7 +45,7 @@ button:hover {
 .cancelbtn {
   width: auto;
   padding: 10px 18px;
-  background-color: #f44336;
+  background-color: red;
 }
 
 span.psw {
