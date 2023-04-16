@@ -1,0 +1,19 @@
+body {
+    background-color: #e2ded6;
+    
+    display: flex;
+    flex-direction: column;
+    
+  }
+
+  .img-text {
+
+    margin-top:75px;
+    margin-bottom: 75px;
+  }
+
+  header {
+    background-color: lightgrey; /* Replace #333 with the desired background color */
+    width: 96%;
+    padding: 30px;
+  }
