@@ -46,7 +46,7 @@ a {
 .button10Ronden:hover {
     background-color: #e2ded6;
     color: black;
-    
+
 }
 
 .buttonSuddenDeath {
@@ -62,4 +62,16 @@ a {
 
 .clear {
     clear: both;
+}
+
+@media only screen and (max-width: 800px) {
+    .button {
+        width: 90%;
+    }
+}
+
+@media only screen and (max-width: 275px) {
+    body {
+        display: none;
+    }
 }
