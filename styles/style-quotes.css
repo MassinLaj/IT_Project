@@ -1,19 +1,43 @@
 body {
-    background-color: #e2ded6;
-    
-    display: flex;
-    flex-direction: column;
-    
-  }
+  background-color: #e2ded6;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+}
 
-  .img-text {
+.img-text {
+  margin-top: 75px;
+  margin-bottom: 75px;
+}
 
-    margin-top:75px;
-    margin-bottom: 75px;
-  }
+header {
+  background-color: #393834;
+  color: #fff;
+  padding: 10px;
+  text-align: center;
+}
 
-  header {
-    background-color: lightgrey; /* Replace #333 with the desired background color */
-    width: 96%;
-    padding: 30px;
+.left-title {
+  float: left;
+}
+
+
+.right-title {
+  float: right;
+}
+
+
+.clearfix::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+
+@media only screen and (max-width: 275px) {
+  body {
+    display: none;
   }
+}
