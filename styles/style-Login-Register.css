@@ -9,7 +9,8 @@ body {
 }
 
 
-#loginform, #registerform {
+#loginform,
+#registerform {
   border: 3px solid #505c68;
   margin: auto;
   background-color: #e2ded6;
@@ -52,10 +53,32 @@ span.psw {
 }
 
 .center {
-  margin: 0;
+  margin: auto;
+  width: 50%;
   position: absolute;
   top: 50%;
   left: 50%;
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
+}
+
+@media only screen and (max-width: 1000px) {
+
+  #loginform,
+  #registerform {
+    border: 3px solid #505c68;
+    margin: auto;
+    background-color: #e2ded6;
+  }
+
+  .center {
+    width: 90%;
+  }
+
+  @media only screen and (max-width: 275px) {
+    body {
+      display: none;
+    }
+  }
+  
 }
