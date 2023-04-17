@@ -29,26 +29,35 @@ body {
     width: 50%;
 }
 
+a {
+    text-decoration: none;
+}
+
+.quiz-link {
+    color: #e2ded6;
+}
+
 .button10Ronden {
-    background-color: white;
+    background-color: 393834;
     color: black;
-    border: 2px solid #5d5a30;
+    border: 2px solid #505c68;
 }
 
 .button10Ronden:hover {
-    background-color: #5d5a30;
-    color: white;
+    background-color: #e2ded6;
+    color: black;
+    
 }
 
 .buttonSuddenDeath {
-    background-color: white;
+    background-color: 393834;
     color: black;
     border: 2px solid #505c68;
 }
 
 .buttonSuddenDeath:hover {
-    background-color: #505c68;
-    color: white;
+    background-color: #e2ded6;
+    color: black;
 }
 
 .clear {
