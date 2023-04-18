@@ -97,17 +97,6 @@ body {
   transform: translate(-50%, -50%);
 }
 
-/* remove underline and colour change from hyperlink*/
-a{
-  text-decoration: none;
-}
-.project-link {
-  color: #e2ded6;
-}
-.login-link{
-  color: white;
-}
-
 .login-button {
   background-color: #393834; /* Green */
   border: 2px solid #393834;
