@@ -56,6 +56,14 @@ body {
     clear: both;
 }
 
+#buttons {
+    color: white;
+}
+
+#buttons:hover {
+    color: black;
+}
+
 @media only screen and (max-width: 800px) {
     .button {
         width: 90%;
