@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,7 +7,6 @@
     <link rel="stylesheet" href="styles/stlye-10-round-Page.css" />
     <title>10 Round Mode</title>
 </head>
-
 <body>
     <header class="header bg-primary">
         <div class="left-title">LOTR Quiz</div>
@@ -16,32 +14,52 @@
         <div class="clearfix"></div>
     </header>
     <main>
-
+        
         <form action="" class="radio-group">
+            <h1>Match the quotes with a character and a movie</h1>
             <h2>1. Who posses the ring of power at the start of the trilogy?</h2>
 
             <section class="radio-row">
-                <input type="radio" id="Gandalf" name="who_has_the_ring" class="Gandalf">
+                <input type="radio" id="Bilbo" name="character" class="Bilbo">
+                <label for="Bilbo">Bilbo</label>
+            
+                <input type="radio" id="The Fellowship of the Ring " name="movie" class="The Fellowship of the Ring ">
+                <label for="The Fellowship of the Ring ">The Fellowship of the Ring </label>
+            </section>
+            
+            <section class="radio-row">
+                <input type="radio" id="Gandalf" name="character" class="Gandalf">
                 <label for="Gandalf">Gandalf</label>
 
-                <input type="radio" id="Bilbo" name="who_has_the_ring" class="Bilbo">
-                <label for="Bilbo">Bilbo</label>
+                <input type="radio" id="The Return of the King" name="movie" class="The Return of the King">
+                <label for="The Return of the King">The Return of the King</label>
             </section>
 
             <section class="radio-row">
-                <input type="radio" id="Frodo" name="who_has_the_ring" class="Frodo">
+                <input type="radio" id="Frodo" name="character" class="Frodo">
                 <label for="Frodo">Frodo</label>
-
-                <input type="radio" id="Sauron" name="who_has_the_ring" class="Sauron">
-                <label for="Sauron">Sauron</label>
+            
+                <input type="radio" id="The Two Towers" name="movie" class="The Two Towers">
+                <label for="The Two Towers">The Two Towers</label>
             </section>
 
-            <input type="submit" value="Submit" class="submit-button">
-
+            <button class="buttonClass">Previous</button>
+            <button class="buttonClass">Next</button>
+            <section>
+                <button class="buttonClass" id="nr2"> <a href="10_round_endscore.html" class="go_score_button" data-role="button" data-inline="true">End Quiz</a> 
+            </button></section>
+            
+            
         </form>
-
+        
     </main>
 
-</body>
+    <footer>
+            <section class="Favourite"> 
+            <button class="buttonLast">&#11088</button>
+            <button class="buttonLast">&#9940</button>
+            </section>
+    </footer>
 
+</body>
 </html>
