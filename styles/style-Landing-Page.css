@@ -1,36 +1,31 @@
-
-
 .navbar {
   background-color: #393834;
 }
 
-.btn{
-  
+.btn {
   background-color: #e2ded6;
   color: black;
 }
 
-.btn:hover{
+.btn:hover {
   color: white;
   border-color: #e2ded6;
   background-color: #393834;
   resize: none;
 }
-.card img{
-  width: 500px;
-  height: 200px;
-  justify-content: center;
-    align-items: center;
+.span {
+  cursor: not-allowed;
+}
+.card {
+  cursor: pointer;
 }
 
 
 @media only screen and (max-width: 500px) {
- .card {
+  .card {
     width: 90%;
     height: 90%;
     justify-content: center;
     align-items: center;
   }
 }
-
-
