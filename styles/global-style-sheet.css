@@ -1,11 +1,57 @@
-body {
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: #e2ded6;
-    font-size: 16px;
-    line-height: 1.5;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+body{
+  background-image: url(/media/images/clean_white_polygon_backgrounds_8_geeks_love_bacon.jpg);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  overflow: hidden;
+}
+img {
+    max-width: 25%;
+    height: 25%;
+    margin: auto;
+}
+.navbar {
+  background-color: #393834;
+  
+}
+
+.btn {
+  background-color: white;
+  border-color: #393834;
+  color: black;
+}
+
+.btn:hover {
+  color: white;
+  border-color: white;
+  background-color: #393834;
+  resize: none;
+}
+
+footer{
+  background-color: #393834;
+  color: white;
 }
 
 
+
+
+@media only screen and (max-width: 1000px) {
+  .center {
+    width: 90%;
+  }
+}
+
+@media only screen and (max-width: 275px) {
+    body {
+      display: none;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+  
+  .card img {
+    display: none;
+  }
+}
+  
