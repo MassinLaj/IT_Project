@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="styles/style-Login-Register.css" />
+    <title>Login Page</title>
+  </head>
+
+  <body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top">
+      <div class="container-xxl">
+        <a class="navbar-brand" href="LandingPage.html">
+          <span> INTERNATIONAAL </span>
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div
+          class="collapse navbar-collapse justify-content-end align-center"
+          id="navbarNav"
+        >
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="LandingPage.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Contact</a>
+            </li>
+            <li class="nav-item">
+              <a class="btn" href="Login.html">Login</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container my-5 mx-auto">
+      <form action="" class="checkbox-group">
+            <h1 class="fw-bolder text-center">Match the quotes with a character and a movie</h1>
+            <h2 class="lead text-center my-5">"I Found It Is The Small Everyday Deeds Of Ordinary Folk That Keep The Darkness At Bay."</h2>
+
+            
+            <section class="checkbox-row">
+                <input type="checkbox" id="Bilbo" name="character" class="form-check-input">
+                <label for="Bilbo">Bilbo</label>
+            
+                <input type="checkbox" id="The Fellowship of the Ring " name="movie" class="form-check-input ">
+                <label for="The Fellowship of the Ring ">The Fellowship of the Ring </label>
+            </section>
+            
+            <section class="checkbox-row">
+                <input type="checkbox" id="Gandalf" name="character" class="form-check-input">
+                <label for="Gandalf">Gandalf</label>
+
+                <input type="checkbox" id="The Return of the King" name="movie" class="form-check-input">
+                <label for="The Return of the King">The Return of the King</label>
+            </section>
+
+            <section class="checkbox-row">
+                <input type="checkbox" id="Frodo" name="character" class="form-check-input">
+                <label for="Frodo">Frodo</label>
+            
+                <input type="checkbox" id="The Two Towers" name="movie" class="form-check-input">
+                <label for="The Two Towers">The Two Towers</label>
+            </section>
+                <button class="btn">Previous</button>
+                <button class="btn" onclick="window.location.href = '/10_round_endscore.html';">Next</button>
+            <section>
+                <button type="button" class="btn" id="nr2" onclick="window.location.href = '/10_round_endscore.html';">End Quiz</button>
+            </section>
+      </form>
+
+      <section class="Favourite"> 
+          <button class="btn">&#11088</button>
+          <button class="btn">&#9940</button>
+      </section>       
+    </div>
+
+
+    <footer class="fixed-bottom text-center text-lg-start">
+      <div class="text-center p-3">
+        © 2023 Copyright by INTERNATIONAAL
+      </div>
+    </footer>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

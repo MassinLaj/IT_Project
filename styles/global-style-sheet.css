@@ -5,11 +5,7 @@ body{
   background-size: cover;
   overflow: hidden;
 }
-img {
-    max-width: 25%;
-    height: 25%;
-    margin: auto;
-}
+
 .navbar {
   background-color: #393834;
   
