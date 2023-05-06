@@ -1,76 +1,38 @@
-body {
-  background-color: #e2ded6;
-  font-family: Arial, Helvetica, sans-serif;
-  display: flex;
-  height: 100%;
-  width: 100%;
-  margin: 0;
-  display: flex;
+body{
+  background-image: url(/media/images/clean_white_polygon_backgrounds_8_geeks_love_bacon.jpg);
+   background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  overflow: hidden;
 }
 
-
-#loginform,
-#registerform {
-  border: 3px solid #505c68;
-  margin: auto;
-  background-color: #e2ded6;
-  padding: 16px;
+.navbar {
+  background-color: #393834;
+  
 }
 
-input[type=text],
-input[type=password] {
-  width: 100%;
-  padding: 12px 20px;
-  margin: 8px 0;
-  display: inline-block;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
+.btn {
+  background-color: white;
+  border-color: #393834;
+  color: black;
 }
 
-button {
+.btn:hover {
+  color: white;
+  border-color: white;
+  background-color: #393834;
+  resize: none;
+}
+
+footer{
   background-color: #393834;
   color: white;
-  padding: 14px 20px;
-  margin: 8px 0;
-  border: none;
-  cursor: pointer;
-  width: 100%;
 }
 
-button:hover {
-  opacity: 0.8;
-}
 
-.cancelbtn {
-  width: auto;
-  padding: 10px 18px;
-  background-color: red;
-}
 
-span.psw {
-  float: right;
-  padding-top: 16px;
-}
-
-.center {
-  margin: auto;
-  width: 50%;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-}
 
 @media only screen and (max-width: 1000px) {
-
-  #loginform,
-  #registerform {
-    border: 3px solid #505c68;
-    margin: auto;
-    background-color: #e2ded6;
-  }
-
   .center {
     width: 90%;
   }
