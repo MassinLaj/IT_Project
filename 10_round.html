@@ -10,7 +10,7 @@
       integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="styles/style-Login-Register.css" />
+    <link rel="stylesheet" href="styles/style-Landing-Page.css" />
     <title>Login Page</title>
   </head>
 
@@ -55,34 +55,34 @@
     <div class="container my-5">
       <form action="" class="checkbox-group">
             <h1 class="fw-bolder text-center">Match the quotes with a character and a movie</h1>
-            <h2 class="lead text-center my-5">"I Found It Is The Small Everyday Deeds Of Ordinary Folk That Keep The Darkness At Bay."</h2>
+            <h2 class="lead text-center my-5" id="quote-name"></h2>
 
             
             <section class="checkbox-row">
-                <input type="checkbox" id="Bilbo" name="character" class="form-check-input">
-                <label for="Bilbo">Bilbo</label>
+                <input type="checkbox"  name="character" class="form-check-input">
+                <label id="character-name"></label>
             
-                <input type="checkbox" id="The Fellowship of the Ring " name="movie" class="form-check-input ">
-                <label for="The Fellowship of the Ring ">The Fellowship of the Ring </label>
+                <input type="checkbox" name="movie" class="form-check-input ">
+                <label id="movie-name"></label>
             </section>
             
             <section class="checkbox-row">
-                <input type="checkbox" id="Gandalf" name="character" class="form-check-input">
-                <label for="Gandalf">Gandalf</label>
+                <input type="checkbox" name="character" class="form-check-input">
+                <label id="character-name2"></label>
 
-                <input type="checkbox" id="The Return of the King" name="movie" class="form-check-input">
-                <label for="The Return of the King">The Return of the King</label>
+                <input type="checkbox" name="movie" class="form-check-input">
+                <label id="movie-name2"></label>
             </section>
 
             <section class="checkbox-row">
-                <input type="checkbox" id="Frodo" name="character" class="form-check-input">
-                <label for="Frodo">Frodo</label>
+                <input type="checkbox" name="character" class="form-check-input">
+                <label id="character-name3"></label>
             
-                <input type="checkbox" id="The Two Towers" name="movie" class="form-check-input">
-                <label for="The Two Towers">The Two Towers</label>
+                <input type="checkbox"name="movie" class="form-check-input">
+                <label id="movie-name3"></label>
             </section>
-                <button class="btn">Previous</button>
-                <button class="btn" onclick="window.location.href = '/10_round_endscore.html';">Next</button>
+               
+                <button class="btn" onclick="window.location.href = '/10_round_endscore.html';">Submit</button>
             <section>
                 <button type="button" class="btn" id="nr2" onclick="window.location.href = '/10_round_endscore.html';">End Quiz</button>
             </section>
@@ -100,6 +100,9 @@
         © 2023 Copyright by INTERNATIONAAL
       </h6>
     </footer>
+
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="/IT_Project/script.js"></script>
 
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
