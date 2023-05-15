@@ -5,7 +5,7 @@ const app = express();
 app.use(express.urlencoded({extended: true}));
 app.use('/public', express.static('public'));
 
-app.set("url", "it-project-git-ejscontactloginregister-massinlaj.vercel.app");
+app.set("port", 3000);
 app.set("view engine", "ejs");
 
 //contact start
@@ -45,5 +45,5 @@ app.post("/register", (req, res) => {
 //register end
 
 app.listen(app.get("port"), () => {
-    console.log(`Web app has started on ${app.get("port")}`);
+    console.log(`Web app has started on http://localhost:${app.get("port")}`);
 });
