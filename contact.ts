@@ -1,6 +1,10 @@
 import express from "express"
 
 const app = express();
+
+app.use(express.urlencoded({extended: true}));
+app.use('/public', express.static('public'));
+
 app.set("port", 3000);
 app.set("view engine", "ejs");
 
@@ -9,9 +13,11 @@ app.get("/contact", (req, res) =>{
 });
 
 app.post("/contact", (req, res) => {
-    res.render("emailsent");
+
+    console.log(req.body);
+
 });
 
 app.listen(app.get("port"), () => {
-    console.log(`Web app has started on http://localhost:${app.get("port")}`);
+    console.log(`Web app has started on http://localhost:${app.get("port")}/contact`);
 });
