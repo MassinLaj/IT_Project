@@ -1,12 +1,24 @@
-import express from "express"
+import express, { Request, Response } from 'express'
 
 const app = express();
+const port = process.env.PORT || 8080
 
 app.use(express.urlencoded({extended: true}));
 app.use('/public', express.static('public'));
 
 app.set("port", 3000);
 app.set("view engine", "ejs");
+
+//start landing
+app.get('/', (_req: Request, res: Response) => {
+    return res.send('Express Typescript on Vercel')
+  })
+
+  app.get('/ping', (_req: Request, res: Response) => {
+    return res.send('pong 🏓')
+  })
+//end landing
+
 
 //contact start
 app.get("/contact", (req, res) =>{
@@ -44,6 +56,6 @@ app.post("/register", (req, res) => {
 });
 //register end
 
-app.listen(app.get("port"), () => {
-    console.log(`Web app has started on http://localhost:${app.get("port")}`);
-});
+app.listen(port, () => {
+    return console.log(`Server is listening on ${port}`)
+  })
