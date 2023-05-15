@@ -7,3 +7,4 @@ npm install nodemon
 npm install ts-node
 npm install @types/ejs
 npm install pre-commit
+npm install rimraf

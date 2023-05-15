@@ -8,6 +8,7 @@
     "mongodb": "^5.5.0",
     "nodemon": "^2.0.22",
     "pre-commit": "^1.2.2",
+    "rimraf": "^5.0.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.4"
   },
