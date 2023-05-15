@@ -1,5 +1,5 @@
 {
-    "version": 2,
+    "version": 19.0,
     "builds": [
       {
         "src": "index.ts",
