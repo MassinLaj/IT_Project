@@ -19,7 +19,8 @@
   "devDependencies": {
     "@types/ejs": "^3.1.2",
     "@types/express": "^4.17.17",
-    "@types/node": "^20.1.4"
+    "@types/node": "^20.1.4",
+    "@vercel/node": "^2.14.2"
   },
   "keywords": []
 }
