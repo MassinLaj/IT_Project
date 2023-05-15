@@ -44,7 +44,7 @@ img {
   border: 2px solid black;
   border-radius: 100%;
   background-color:#393834;
-  font-size: 24px;
+  font-size: 15px;
   font-weight: bold;
   text-align: center;
   padding: 10px;
@@ -56,7 +56,14 @@ img {
   text-align: center;
   margin-top: 10px;
 }
+.terugHP {
 
+display: flex;
+margin-top: 20px;
+font-size: 1.5rem; /* Adjust the font size as needed */
+font-weight: bold; /* Apply the desired font weight */
+
+}
 
 @media only screen and (max-width: 275px) {
   body {

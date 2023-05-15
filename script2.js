@@ -16,12 +16,11 @@ function disableOtherMovies(checkbox) {
 }
 
 function submitAnswer() {
-  
   const characterCheckbox = document.querySelector('input[name="character"]:checked');
   const movieCheckbox = document.querySelector('input[name="movie"]:checked');
-  
+
   let roundScore = 0;
-  
+
   if (characterCheckbox && movieCheckbox) {
     if (
       characterCheckbox.value === 'character-name' &&
@@ -29,13 +28,13 @@ function submitAnswer() {
     ) {
       roundScore = 1;
     } else if (
-      characterCheckbox.value === 'character-name' ||
-      movieCheckbox.value === 'relevant-movie'
+      characterCheckbox.value !== 'character-name' ||
+      movieCheckbox.value !== 'relevant-movie'
     ) {
-      roundScore = 0.5;
+      roundScore = 0;
     }
   }
-  
+
   const currentScore = parseFloat(localStorage.getItem('score')) || 0;
   const newScore = currentScore + roundScore;
 
@@ -47,13 +46,14 @@ function submitAnswer() {
 
   updateRoundDisplay(roundCount + 1);
 
-  if (roundCount === 9) {
-    
-    document.getElementById("SubmitNR").disabled = true;
-    document.getElementById("nr2").disabled = false;
-  } 
-}
+  const incorrectSelection = roundScore === 0;
+  const roundCountReachedLimit = roundCount === 9;
 
+  if (incorrectSelection || roundCountReachedLimit) {
+    document.getElementById('SubmitNR').disabled = true;
+    document.getElementById('nr2').disabled = false;
+  }
+}
 
 
 function updateRoundDisplay(roundCount) {
