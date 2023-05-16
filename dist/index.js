@@ -231,11 +231,33 @@ app.get('/', function (req, res) {
 });
 // End landing
 // Contact start
+var contactSchema = new mongoose.Schema({
+    name: String,
+    email: String,
+    message: String,
+});
+var ContactModel = mongoose.model('Contact', contactSchema, 'contact');
 app.get('/contact', function (_req, res) {
     res.render('contact', { user: _req.session.user });
 });
 app.post('/contact', function (req, res) {
-    console.log(req.body);
+    var _a = req.body, name = _a.name, email = _a.email, message = _a.message;
+    // Create a new document using the ContactModel
+    var contact = new ContactModel({
+        name: name,
+        email: email,
+        message: message,
+    });
+    // Save the document to MongoDB
+    contact.save()
+        .then(function () {
+        console.log('Contact message saved successfully');
+        res.redirect('/'); // Redirect to the homepage or another page after saving
+    })
+        .catch(function (error) {
+        console.error('Error saving contact message:', error);
+        res.redirect('/contact'); // Redirect back to the contact page or show an error message
+    });
 });
 // Contact end
 // About start

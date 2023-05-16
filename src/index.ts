@@ -185,12 +185,38 @@ app.get('/', (req, res) => {
 // End landing
 
 // Contact start
+
+const contactSchema = new mongoose.Schema({
+    name: String,
+    email: String,
+    message: String,
+});
+
+const ContactModel = mongoose.model('Contact', contactSchema, 'contact');
 app.get('/contact', (_req: Request, res: Response) => {
     res.render('contact', { user: _req.session.user });
 });
 
 app.post('/contact', (req, res) => {
-    console.log(req.body);
+    const { name, email, message } = req.body;
+
+    // Create a new document using the ContactModel
+    const contact = new ContactModel({
+        name: name,
+        email: email,
+        message: message,
+    });
+
+    // Save the document to MongoDB
+    contact.save()
+        .then(() => {
+            console.log('Contact message saved successfully');
+            res.redirect('/'); // Redirect to the homepage or another page after saving
+        })
+        .catch((error) => {
+            console.error('Error saving contact message:', error);
+            res.redirect('/contact'); // Redirect back to the contact page or show an error message
+        });
 });
 // Contact end
 
