@@ -45,6 +45,11 @@ app.post("/register", function (req, res) {
     console.log(req.body);
 });
 //register end
+//about start
+app.get("/about", function (_req, res) {
+    res.render('about');
+});
+//about end
 app.listen(port, function () {
     return console.log("Server is listening on ".concat(port));
 });

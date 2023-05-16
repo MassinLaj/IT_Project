@@ -60,6 +60,13 @@ app.post("/register", (req, res) => {
 });
 //register end
 
+//about start
+app.get("/about", (_req: Request, res: Response) =>{
+    res.render('about');
+});
+
+//about end
+
 app.listen(port, () => {
     return console.log(`Server is listening on ${port}`)
   })
