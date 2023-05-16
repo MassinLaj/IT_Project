@@ -19,7 +19,7 @@ app.get('/ping', function (_req, res) {
 });
 //end landing
 //contact start
-app.get("/contact", function (req, res) {
+app.get("/contact", function (_req, res) {
     res.render("contact");
 });
 app.post("/contact", function (req, res) {

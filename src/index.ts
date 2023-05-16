@@ -21,7 +21,7 @@ app.get('/', (_req: Request, res: Response) => {
 
 
 //contact start
-app.get("/contact", (req, res) =>{
+app.get("/contact", (_req: Request, res: Response) =>{
     res.render("contact");
 });
 
