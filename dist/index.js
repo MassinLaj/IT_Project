@@ -189,7 +189,11 @@ app.post('/login', function (req, res) { return __awaiter(void 0, void 0, void 0
                     return [2 /*return*/];
                 }
                 // Initialize user object if it doesn't exist
-                req.session.user = req.session.user || {};
+                req.session.user = {
+                    name: user.name,
+                    loggedIn: true,
+                    email: user.email,
+                };
                 // Update the session object with loggedIn and user properties
                 req.session.loggedIn = true;
                 req.session.user.loggedIn = true; // Set loggedIn property to true
@@ -207,6 +211,19 @@ app.post('/login', function (req, res) { return __awaiter(void 0, void 0, void 0
     });
 }); });
 // Login end
+// Logout
+app.get('/logout', function (req, res) {
+    // Destroy the session to remove all session data
+    req.session.destroy(function (err) {
+        if (err) {
+            console.error('Error destroying session:', err);
+        }
+        else {
+            console.log('Logout successful');
+        }
+        res.redirect('/'); // Redirect the user to the desired page after logout
+    });
+});
 // Database login/register end
 // Start landing
 app.get('/', function (req, res) {
@@ -215,7 +232,7 @@ app.get('/', function (req, res) {
 // End landing
 // Contact start
 app.get('/contact', function (_req, res) {
-    res.render('contact');
+    res.render('contact', { user: _req.session.user });
 });
 app.post('/contact', function (req, res) {
     console.log(req.body);
@@ -223,7 +240,7 @@ app.post('/contact', function (req, res) {
 // Contact end
 // About start
 app.get('/about', function (_req, res) {
-    res.render('about');
+    res.render('about', { user: _req.session.user });
 });
 // About end
 // Quiz selection start
@@ -238,13 +255,13 @@ app.get('/10_round', function (_req, res) {
 // 10_round end
 // 10_round_endscore start
 app.get('/10_round_endscore', function (_req, res) {
-    res.render('10_round_endscore');
+    res.render('10_round_endscore', { user: _req.session.user });
 });
 // 10_round_endscore end
 // Sudden death start
 app.use(express_1.default.static(path_1.default.join(__dirname, 'views/js')));
 app.get('/sudden_death', function (_req, res) {
-    res.render('sudden_death', {});
+    res.render('sudden_death', { user: _req.session.user });
 });
 // Sudden death end
 // Sudden death end score start
@@ -254,12 +271,12 @@ app.get('/suddendeath_endscore', function (_req, res) {
 // Sudden death end score end
 // Whitelist start
 app.get('/whitelist', function (_req, res) {
-    res.render('whitelist');
+    res.render('whitelist', { user: _req.session.user });
 });
 // Whitelist end
 // Blacklist start
 app.get('/blacklist', function (_req, res) {
-    res.render('blacklist');
+    res.render('blacklist', { user: _req.session.user });
 });
 // Blacklist end
 app.listen(port, function () {
