@@ -52,6 +52,11 @@ app.get("/quiz_selection", function (_req, res) {
     res.render('quiz_selection');
 });
 //quiz_selection end
+//10_round start
+app.get("/10_round", function (_req, res) {
+    res.render('10_round');
+});
+//10_round end
 app.listen(port, function () {
     return console.log("Server is listening on ".concat(port));
 });

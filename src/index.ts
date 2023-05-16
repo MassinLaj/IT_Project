@@ -71,6 +71,14 @@ app.get("/quiz_selection", (_req: Request, res: Response) =>{
 //quiz_selection end
 
 
+//10_round start
+app.get("/10_round", (_req: Request, res: Response) =>{
+    res.render('10_round');
+});
+
+//10_round end
+
+
 app.listen(port, () => {
     return console.log(`Server is listening on ${port}`)
   })
