@@ -15,11 +15,7 @@ app.set("view engine", "ejs");
 
 //start landing
 app.get('/', (_req: Request, res: Response) => {
-    return res.send('Express Typescript on Vercel')
-  })
-
-  app.get('/ping', (_req: Request, res: Response) => {
-    return res.send('pong 🏓')
+    res.render('landingpage')
   })
 //end landing
 
@@ -59,6 +55,48 @@ app.post("/register", (req, res) => {
 
 });
 //register end
+
+//about start
+app.get("/about", (_req: Request, res: Response) =>{
+    res.render('about');
+});
+
+//about end
+
+//quiz_selection start
+app.get("/quiz_selection", (_req: Request, res: Response) =>{
+    res.render('quiz_selection');
+});
+
+//quiz_selection end
+
+
+//10_round start
+app.get("/10_round", (_req: Request, res: Response) =>{
+    res.render('10_round');
+});
+
+//10_round end
+
+//10_round_endscore start
+app.get("/10_round_endscore", (_req: Request, res: Response) =>{
+    res.render('10_round_endscore');
+});
+
+//10_round_endscore end
+
+
+//sudden_death start
+app.use(express.static(path.join(__dirname, 'views/js')));
+
+app.get("/sudden_death", (_req: Request, res: Response) =>{
+    res.render('sudden_death', {
+    })
+});
+
+//sudden_death end
+
+
 
 app.listen(port, () => {
     return console.log(`Server is listening on ${port}`)

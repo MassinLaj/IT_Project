@@ -15,10 +15,7 @@ app.set('views', path.join(__dirname, '..', 'views'));
 app.set("view engine", "ejs");
 //start landing
 app.get('/', function (_req, res) {
-    return res.send('Express Typescript on Vercel');
-});
-app.get('/ping', function (_req, res) {
-    return res.send('pong 🏓');
+    res.render('landingpage');
 });
 //end landing
 //contact start
@@ -45,6 +42,32 @@ app.post("/register", function (req, res) {
     console.log(req.body);
 });
 //register end
+//about start
+app.get("/about", function (_req, res) {
+    res.render('about');
+});
+//about end
+//quiz_selection start
+app.get("/quiz_selection", function (_req, res) {
+    res.render('quiz_selection');
+});
+//quiz_selection end
+//10_round start
+app.get("/10_round", function (_req, res) {
+    res.render('10_round');
+});
+//10_round end
+//10_round_endscore start
+app.get("/10_round_endscore", function (_req, res) {
+    res.render('10_round_endscore');
+});
+//10_round_endscore end
+//sudden_death start
+app.use(express_1.default.static(path.join(__dirname, 'views/js')));
+app.get("/sudden_death", function (_req, res) {
+    res.render('sudden_death', {});
+});
+//sudden_death end
 app.listen(port, function () {
     return console.log("Server is listening on ".concat(port));
 });
