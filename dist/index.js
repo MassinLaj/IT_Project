@@ -73,6 +73,16 @@ app.get("/suddendeath_endscore", function (_req, res) {
     res.render('suddendeath_endscore');
 });
 //suddendeath_endscore end
+//whitelist start
+app.get("/whitelist", function (_req, res) {
+    res.render('whitelist');
+});
+//whitelist end
+//blacklist start
+app.get("/blacklist", function (_req, res) {
+    res.render('blacklist');
+});
+//blacklist end
 app.listen(port, function () {
     return console.log("Server is listening on ".concat(port));
 });

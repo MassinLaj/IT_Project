@@ -108,6 +108,24 @@ app.get("/suddendeath_endscore", (_req: Request, res: Response) =>{
 
 //suddendeath_endscore end
 
+
+//whitelist start
+app.get("/whitelist", (_req: Request, res: Response) =>{
+    res.render('whitelist');
+});
+
+//whitelist end
+
+
+//blacklist start
+app.get("/blacklist", (_req: Request, res: Response) =>{
+    res.render('blacklist');
+});
+
+//blacklist end
+
+
+
 app.listen(port, () => {
     return console.log(`Server is listening on ${port}`)
   })
