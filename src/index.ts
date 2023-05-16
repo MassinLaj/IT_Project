@@ -15,11 +15,7 @@ app.set("view engine", "ejs");
 
 //start landing
 app.get('/', (_req: Request, res: Response) => {
-    return res.send('Express Typescript on Vercel')
-  })
-
-  app.get('/ping', (_req: Request, res: Response) => {
-    return res.send('pong 🏓')
+    res.render('landingpage')
   })
 //end landing
 

@@ -15,10 +15,7 @@ app.set('views', path.join(__dirname, '..', 'views'));
 app.set("view engine", "ejs");
 //start landing
 app.get('/', function (_req, res) {
-    return res.send('Express Typescript on Vercel');
-});
-app.get('/ping', function (_req, res) {
-    return res.send('pong 🏓');
+    res.render('landingpage');
 });
 //end landing
 //contact start
