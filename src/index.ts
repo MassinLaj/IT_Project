@@ -22,7 +22,7 @@ app.get('/', (_req: Request, res: Response) => {
 
 //contact start
 app.get("/contact", (_req: Request, res: Response) =>{
-    res.render("contact");
+    res.render("../views/contact");
 });
 
 app.post("/contact", (req, res) => {
