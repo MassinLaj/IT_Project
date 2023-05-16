@@ -91,7 +91,6 @@ app.use(express.static(path.join(__dirname, 'views/js')));
 
 app.get("/sudden_death", (_req: Request, res: Response) =>{
     res.render('sudden_death', {
-        utils: script2
     })
 });
 
