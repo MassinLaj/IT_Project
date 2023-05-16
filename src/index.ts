@@ -85,6 +85,20 @@ app.get("/10_round_endscore", (_req: Request, res: Response) =>{
 
 //10_round_endscore end
 
+
+//sudden_death start
+app.use(express.static(path.join(__dirname, 'views/js')));
+
+app.get("/sudden_death", (_req: Request, res: Response) =>{
+    res.render('sudden_death', {
+        utils: script2
+    })
+});
+
+//sudden_death end
+
+
+
 app.listen(port, () => {
     return console.log(`Server is listening on ${port}`)
   })

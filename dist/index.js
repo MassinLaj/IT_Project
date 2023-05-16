@@ -62,6 +62,12 @@ app.get("/10_round_endscore", function (_req, res) {
     res.render('10_round_endscore');
 });
 //10_round_endscore end
+//sudden_death start
+app.use(express_1.default.static(path.join(__dirname, 'views/js')));
+app.get("/sudden_death", function (_req, res) {
+    res.render('sudden_death', {});
+});
+//sudden_death end
 app.listen(port, function () {
     return console.log("Server is listening on ".concat(port));
 });
