@@ -1,59 +1,84 @@
-import express, { Request, Response } from 'express'
-import bodyParser from 'body-parser'
-import * as mongoose from 'mongoose'
-import path from 'path'
+import express, { Request, Response } from 'express';
+import bodyParser from 'body-parser';
+import * as mongoose from 'mongoose';
+import path from 'path';
 import bcrypt from 'bcrypt';
+import session, { SessionData } from 'express-session';
 
+declare module 'express-session' {
+    interface SessionData {
+      loggedIn?: boolean;
+      user?: CustomSessionUser;
+    }
+  }
+  
+  interface CustomSessionUser {
+    name?: string;
+    loggedIn?: boolean;
+    email?: string;
+    password1?: string;
+    password2?: string;
+    // Add other properties if necessary
+  }
+  
+  
 const app = express();
-const port = process.env.PORT || 8080
+const port = process.env.PORT || 8080;
 
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({
-    extended: true
-}))
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
-app.set("port", 3000);
-app.set('views', path.join(__dirname, '..', 'views'))
+app.set('port', 3000);
+app.set('views', path.join(__dirname, '..', 'views'));
 
-app.set("view engine", "ejs");
+app.set('view engine', 'ejs');
 
-
-//database login/register start
+// Database login/register start
 const loginSchema = new mongoose.Schema({
     name: String,
     email: String,
     password1: String,
-    password2: String
-  });
-  
-  mongoose.model('login', loginSchema);
-
-
-
-mongoose.connect('mongodb+srv://oogwavy:Internationaal_95@database.n6kinc2.mongodb.net/Internationaal', {
-    connectTimeoutMS: 5000,
-    socketTimeoutMS: 45000,
-    serverSelectionTimeoutMS: 5000,
-    dbName: 'Internationaal'
-}).then(() => {
-    console.log('Connected to MongoDB');
-}).catch((error) => {
-    console.log('Error in Connecting to Database: ', error);
+    password2: String,
 });
 
+const LoginModel = mongoose.model('login', loginSchema);
 
-//register start
-app.get("/register", (req, res) => {
-    res.set({
-        "Allow-access-Allow-Origin": '*'
+mongoose
+    .connect('mongodb+srv://oogwavy:Internationaal_95@database.n6kinc2.mongodb.net/Internationaal', {
+        connectTimeoutMS: 5000,
+        socketTimeoutMS: 45000,
+        serverSelectionTimeoutMS: 5000,
+        dbName: 'Internationaal',
+    })
+    .then(() => {
+        console.log('Connected to MongoDB');
+    })
+    .catch((error) => {
+        console.log('Error in Connecting to Database: ', error);
     });
-    res.render("register");
+
+// Configure session
+app.use(
+    session({
+        secret: 'k|*.FGu7,R@aBV0WL(y;Xg&dj*L$i7jc&>+q!befp4xh-!2lC9#`M&aT84]oxGq',
+        resave: false,
+        saveUninitialized: false,
+    })
+);
+
+// Register start
+app.get('/register', (_req: Request, res: Response) => {
+    res.set({
+        'Allow-access-Allow-Origin': '*',
+    });
+    res.render('register', { user: _req.session.user });
 });
 
-app.post("/register", async (req, res) => {
+
+app.post('/register', async (req, res) => {
     const name = req.body.name;
     const email = req.body.email;
     const password1 = req.body.password1;
@@ -61,7 +86,7 @@ app.post("/register", async (req, res) => {
 
     if (password1 !== password2) {
         // Passwords do not match
-        res.render("register", { error: "Passwords do not match" }); // Render the registration page with an error message
+        res.render('register', { error: 'Passwords do not match' }); // Render the registration page with an error message
         return;
     }
 
@@ -70,43 +95,40 @@ app.post("/register", async (req, res) => {
         const hashedPassword = await bcrypt.hash(password1, saltRounds);
 
         const data = {
-            "name": name,
-            "email": email,
-            "password1": hashedPassword
-        }
+            name: name,
+            email: email,
+            password1: hashedPassword,
+        };
 
         const LoginModel = mongoose.model('login');
         const result = await LoginModel.create(data);
 
-        console.log("Record Inserted Successfully");
+        console.log('Record Inserted Successfully');
         res.redirect('/');
     } catch (err) {
         console.error(err);
-        res.render("register", { error: "An error occurred during registration" }); // Render the registration page with an error message
+        res.render('register', { error: 'An error occurred during registration' }); // Render the registration page with an error message
     }
 });
 
-//register end
+// Register end
 
-
-
-//login start
-app.get("/login", (req, res) => {
-    res.render("login");
+// Login start
+app.get('/login', (_req: Request, res: Response) => {
+    res.render('login', { user: _req.session.user });
 });
 
-app.post("/login", async (req, res) => {
+app.post('/login', async (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
 
     try {
         const LoginModel = mongoose.model('login');
         const user = await LoginModel.findOne({ email: email });
-
         if (!user) {
             // User not found
-            console.log("Invalid email or password");
-            res.render("login", { error: "Invalid email or password", email: '' }); // Render the login page with an error message and cleared email field
+            console.log('Invalid email or password');
+            res.render('login', { error: 'Invalid email or password', email: '' }); // Render the login page with an error message and cleared email field
             return;
         }
 
@@ -114,12 +136,19 @@ app.post("/login", async (req, res) => {
 
         if (!passwordMatch) {
             // Password doesn't match
-            console.log("Invalid email or password");
-            res.render("login", { error: "Invalid email or password", email: '' }); // Render the login page with an error message and cleared email field
+            console.log('Invalid email or password');
+            res.render('login', { error: 'Invalid email or password', email: '' }); // Render the login page with an error message and cleared email field
             return;
         }
 
-        console.log("Login successful");
+        // Initialize user object if it doesn't exist
+        req.session.user = req.session.user || {};
+
+        // Update the session object with loggedIn and user properties
+        req.session.loggedIn = true;
+        req.session.user.loggedIn = true; // Set loggedIn property to true
+
+        console.log('Login successful');
         // Perform any other necessary actions for a successful login
 
         res.redirect('/'); // Redirect the user to the desired page after successful login
@@ -128,98 +157,76 @@ app.post("/login", async (req, res) => {
         res.redirect('/login'); // Redirect the user back to the login page or show an error message
     }
 });
+// Login end
 
-//login end
-//database login/register end
+// Database login/register end
 
+// Start landing
+app.get('/', (req, res) => {
+    res.render('landingpage', { user: req.session.user });
+});
+// End landing
 
-
-//start landing
-app.get('/', (_req: Request, res: Response) => {
-    res.render('landingpage')
-})
-//end landing
-
-
-//contact start
-app.get("/contact", (_req: Request, res: Response) => {
+// Contact start
+app.get('/contact', (_req: Request, res: Response) => {
     res.render('contact');
 });
 
-app.post("/contact", (req, res) => {
-
+app.post('/contact', (req, res) => {
     console.log(req.body);
-
 });
-//contact end
+// Contact end
 
-
-//about start
-app.get("/about", (_req: Request, res: Response) => {
+// About start
+app.get('/about', (_req: Request, res: Response) => {
     res.render('about');
 });
+// About end
 
-//about end
-
-
-//quiz_selection start
-app.get("/quiz_selection", (_req: Request, res: Response) => {
-    res.render('quiz_selection');
+// Quiz selection start
+app.get('/quiz_selection', (_req: Request, res: Response) => {
+    res.render('quiz_selection', { user: _req.session.user });
 });
+// Quiz selection end
 
-//quiz_selection end
-
-
-//10_round start
-app.get("/10_round", (_req: Request, res: Response) => {
-    res.render('10_round');
+// 10_round start
+app.get('/10_round', (_req: Request, res: Response) => {
+    res.render('10_round', { user: _req.session.user });
 });
+// 10_round end
 
-//10_round end
-
-
-//10_round_endscore start
-app.get("/10_round_endscore", (_req: Request, res: Response) => {
+// 10_round_endscore start
+app.get('/10_round_endscore', (_req: Request, res: Response) => {
     res.render('10_round_endscore');
 });
+// 10_round_endscore end
 
-//10_round_endscore end
-
-
-//sudden_death start
+// Sudden death start
 app.use(express.static(path.join(__dirname, 'views/js')));
 
-app.get("/sudden_death", (_req: Request, res: Response) => {
-    res.render('sudden_death', {
-    })
+app.get('/sudden_death', (_req: Request, res: Response) => {
+    res.render('sudden_death', {});
 });
-//sudden_death end
+// Sudden death end
 
-
-//suddendeath_endscore start
-app.get("/suddendeath_endscore", (_req: Request, res: Response) => {
+// Sudden death end score start
+app.get('/suddendeath_endscore', (_req: Request, res: Response) => {
     res.render('suddendeath_endscore');
 });
+// Sudden death end score end
 
-//suddendeath_endscore end
-
-
-//whitelist start
-app.get("/whitelist", (_req: Request, res: Response) => {
+// Whitelist start
+app.get('/whitelist', (_req: Request, res: Response) => {
     res.render('whitelist');
 });
+// Whitelist end
 
-//whitelist end
-
-
-//blacklist start
-app.get("/blacklist", (_req: Request, res: Response) => {
+// Blacklist start
+app.get('/blacklist', (_req: Request, res: Response) => {
     res.render('blacklist');
 });
-
-//blacklist end
-
+// Blacklist end
 
 app.listen(port, () => {
-    console.log("Listening on PORT 8080}");
+    console.log('Listening on PORT 8080');
 });

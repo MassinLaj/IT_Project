@@ -67,45 +67,53 @@ var body_parser_1 = __importDefault(require("body-parser"));
 var mongoose = __importStar(require("mongoose"));
 var path_1 = __importDefault(require("path"));
 var bcrypt_1 = __importDefault(require("bcrypt"));
+var express_session_1 = __importDefault(require("express-session"));
 var app = (0, express_1.default)();
 var port = process.env.PORT || 8080;
 app.use(body_parser_1.default.json());
-app.use(body_parser_1.default.urlencoded({
-    extended: true
-}));
+app.use(body_parser_1.default.urlencoded({ extended: true }));
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use(express_1.default.static('public'));
 app.use(express_1.default.static(path_1.default.join(__dirname, '..', 'public')));
-app.set("port", 3000);
+app.set('port', 3000);
 app.set('views', path_1.default.join(__dirname, '..', 'views'));
-app.set("view engine", "ejs");
-//database login/register start
+app.set('view engine', 'ejs');
+// Database login/register start
 var loginSchema = new mongoose.Schema({
     name: String,
     email: String,
     password1: String,
-    password2: String
+    password2: String,
 });
-mongoose.model('login', loginSchema);
-mongoose.connect('mongodb+srv://oogwavy:Internationaal_95@database.n6kinc2.mongodb.net/Internationaal', {
+var LoginModel = mongoose.model('login', loginSchema);
+mongoose
+    .connect('mongodb+srv://oogwavy:Internationaal_95@database.n6kinc2.mongodb.net/Internationaal', {
     connectTimeoutMS: 5000,
     socketTimeoutMS: 45000,
     serverSelectionTimeoutMS: 5000,
-    dbName: 'Internationaal'
-}).then(function () {
+    dbName: 'Internationaal',
+})
+    .then(function () {
     console.log('Connected to MongoDB');
-}).catch(function (error) {
+})
+    .catch(function (error) {
     console.log('Error in Connecting to Database: ', error);
 });
-//register start
-app.get("/register", function (req, res) {
+// Configure session
+app.use((0, express_session_1.default)({
+    secret: 'k|*.FGu7,R@aBV0WL(y;Xg&dj*L$i7jc&>+q!befp4xh-!2lC9#`M&aT84]oxGq',
+    resave: false,
+    saveUninitialized: false,
+}));
+// Register start
+app.get('/register', function (_req, res) {
     res.set({
-        "Allow-access-Allow-Origin": '*'
+        'Allow-access-Allow-Origin': '*',
     });
-    res.render("register");
+    res.render('register', { user: _req.session.user });
 });
-app.post("/register", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var name, email, password1, password2, saltRounds, hashedPassword, data, LoginModel, result, err_1;
+app.post('/register', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var name, email, password1, password2, saltRounds, hashedPassword, data, LoginModel_1, result, err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -115,7 +123,7 @@ app.post("/register", function (req, res) { return __awaiter(void 0, void 0, voi
                 password2 = req.body.password2;
                 if (password1 !== password2) {
                     // Passwords do not match
-                    res.render("register", { error: "Passwords do not match" }); // Render the registration page with an error message
+                    res.render('register', { error: 'Passwords do not match' }); // Render the registration page with an error message
                     return [2 /*return*/];
                 }
                 _a.label = 1;
@@ -126,33 +134,33 @@ app.post("/register", function (req, res) { return __awaiter(void 0, void 0, voi
             case 2:
                 hashedPassword = _a.sent();
                 data = {
-                    "name": name,
-                    "email": email,
-                    "password1": hashedPassword
+                    name: name,
+                    email: email,
+                    password1: hashedPassword,
                 };
-                LoginModel = mongoose.model('login');
-                return [4 /*yield*/, LoginModel.create(data)];
+                LoginModel_1 = mongoose.model('login');
+                return [4 /*yield*/, LoginModel_1.create(data)];
             case 3:
                 result = _a.sent();
-                console.log("Record Inserted Successfully");
+                console.log('Record Inserted Successfully');
                 res.redirect('/');
                 return [3 /*break*/, 5];
             case 4:
                 err_1 = _a.sent();
                 console.error(err_1);
-                res.render("register", { error: "An error occurred during registration" }); // Render the registration page with an error message
+                res.render('register', { error: 'An error occurred during registration' }); // Render the registration page with an error message
                 return [3 /*break*/, 5];
             case 5: return [2 /*return*/];
         }
     });
 }); });
-//register end
-//login start
-app.get("/login", function (req, res) {
-    res.render("login");
+// Register end
+// Login start
+app.get('/login', function (_req, res) {
+    res.render('login', { user: _req.session.user });
 });
-app.post("/login", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var email, password, LoginModel, user, passwordMatch, err_2;
+app.post('/login', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var email, password, LoginModel_2, user, passwordMatch, err_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -161,14 +169,14 @@ app.post("/login", function (req, res) { return __awaiter(void 0, void 0, void 0
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 4, , 5]);
-                LoginModel = mongoose.model('login');
-                return [4 /*yield*/, LoginModel.findOne({ email: email })];
+                LoginModel_2 = mongoose.model('login');
+                return [4 /*yield*/, LoginModel_2.findOne({ email: email })];
             case 2:
                 user = _a.sent();
                 if (!user) {
                     // User not found
-                    console.log("Invalid email or password");
-                    res.render("login", { error: "Invalid email or password", email: '' }); // Render the login page with an error message and cleared email field
+                    console.log('Invalid email or password');
+                    res.render('login', { error: 'Invalid email or password', email: '' }); // Render the login page with an error message and cleared email field
                     return [2 /*return*/];
                 }
                 return [4 /*yield*/, bcrypt_1.default.compare(password, user.password1)];
@@ -176,11 +184,16 @@ app.post("/login", function (req, res) { return __awaiter(void 0, void 0, void 0
                 passwordMatch = _a.sent();
                 if (!passwordMatch) {
                     // Password doesn't match
-                    console.log("Invalid email or password");
-                    res.render("login", { error: "Invalid email or password", email: '' }); // Render the login page with an error message and cleared email field
+                    console.log('Invalid email or password');
+                    res.render('login', { error: 'Invalid email or password', email: '' }); // Render the login page with an error message and cleared email field
                     return [2 /*return*/];
                 }
-                console.log("Login successful");
+                // Initialize user object if it doesn't exist
+                req.session.user = req.session.user || {};
+                // Update the session object with loggedIn and user properties
+                req.session.loggedIn = true;
+                req.session.user.loggedIn = true; // Set loggedIn property to true
+                console.log('Login successful');
                 // Perform any other necessary actions for a successful login
                 res.redirect('/'); // Redirect the user to the desired page after successful login
                 return [3 /*break*/, 5];
@@ -193,62 +206,62 @@ app.post("/login", function (req, res) { return __awaiter(void 0, void 0, void 0
         }
     });
 }); });
-//login end
-//database login/register end
-//start landing
-app.get('/', function (_req, res) {
-    res.render('landingpage');
+// Login end
+// Database login/register end
+// Start landing
+app.get('/', function (req, res) {
+    res.render('landingpage', { user: req.session.user });
 });
-//end landing
-//contact start
-app.get("/contact", function (_req, res) {
+// End landing
+// Contact start
+app.get('/contact', function (_req, res) {
     res.render('contact');
 });
-app.post("/contact", function (req, res) {
+app.post('/contact', function (req, res) {
     console.log(req.body);
 });
-//contact end
-//about start
-app.get("/about", function (_req, res) {
+// Contact end
+// About start
+app.get('/about', function (_req, res) {
     res.render('about');
 });
-//about end
-//quiz_selection start
-app.get("/quiz_selection", function (_req, res) {
-    res.render('quiz_selection');
+// About end
+// Quiz selection start
+app.get('/quiz_selection', function (_req, res) {
+    res.render('quiz_selection', { user: _req.session.user });
 });
-//quiz_selection end
-//10_round start
-app.get("/10_round", function (_req, res) {
-    res.render('10_round');
+// Quiz selection end
+// 10_round start
+app.get('/10_round', function (_req, res) {
+    res.render('10_round', { user: _req.session.user });
 });
-//10_round end
-//10_round_endscore start
-app.get("/10_round_endscore", function (_req, res) {
+// 10_round end
+// 10_round_endscore start
+app.get('/10_round_endscore', function (_req, res) {
     res.render('10_round_endscore');
 });
-//10_round_endscore end
-//sudden_death start
+// 10_round_endscore end
+// Sudden death start
 app.use(express_1.default.static(path_1.default.join(__dirname, 'views/js')));
-app.get("/sudden_death", function (_req, res) {
+app.get('/sudden_death', function (_req, res) {
     res.render('sudden_death', {});
 });
-//sudden_death end
-//suddendeath_endscore start
-app.get("/suddendeath_endscore", function (_req, res) {
+// Sudden death end
+// Sudden death end score start
+app.get('/suddendeath_endscore', function (_req, res) {
     res.render('suddendeath_endscore');
 });
-//suddendeath_endscore end
-//whitelist start
-app.get("/whitelist", function (_req, res) {
+// Sudden death end score end
+// Whitelist start
+app.get('/whitelist', function (_req, res) {
     res.render('whitelist');
 });
-//whitelist end
-//blacklist start
-app.get("/blacklist", function (_req, res) {
+// Whitelist end
+// Blacklist start
+app.get('/blacklist', function (_req, res) {
     res.render('blacklist');
 });
-//blacklist end
+// Blacklist end
 app.listen(port, function () {
-    console.log("Listening on PORT 8080}");
+    console.log('Listening on PORT 8080');
 });

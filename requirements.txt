@@ -13,3 +13,6 @@ npm install mongodb
 npm install axios
 npm install pkg
 npm install --save-dev @types/node
+npm install body-parser
+npm install express-session
+npm install @types/express-session
