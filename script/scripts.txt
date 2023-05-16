@@ -1,1 +1,0 @@
-Hier zullen de scripts komen. Voor nu is dit alleen javascript in een aparte map maar dit is future proof indien een 2de taal zoals php moet gebruikt worden voor connecteren met een database voor users.

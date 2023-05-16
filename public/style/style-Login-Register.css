@@ -1,0 +1,46 @@
+body{
+  background-image: url(/media/images/clean_white_polygon_backgrounds_8_geeks_love_bacon.jpg);
+   background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  overflow: hidden;
+}
+
+.navbar {
+  background-color: #393834;
+  
+}
+
+.btn {
+  background-color: white;
+  border-color: #393834;
+  color: black;
+}
+
+.btn:hover {
+  color: white;
+  border-color: white;
+  background-color: #393834;
+  resize: none;
+}
+
+footer{
+  background-color: #393834;
+  color: white;
+}
+
+
+
+
+@media only screen and (max-width: 1000px) {
+  .center {
+    width: 90%;
+  }
+
+  @media only screen and (max-width: 275px) {
+    body {
+      display: none;
+    }
+  }
+  
+}

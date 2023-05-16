@@ -1,0 +1,15 @@
+npm init -y
+
+npm install typescript
+npm install @types/node
+npm install @types/express
+npm install nodemon
+npm install ts-node
+npm install @types/ejs
+npm install pre-commit
+npm install rimraf
+npm install bcrypt
+npm install mongodb
+npm install axios
+npm install pkg
+npm install --save-dev @types/node
