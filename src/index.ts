@@ -1,131 +1,275 @@
-import express, { Request, Response } from 'express'
+import express, { Request, Response } from 'express';
+import bodyParser from 'body-parser';
+import * as mongoose from 'mongoose';
+import path from 'path';
+import bcrypt from 'bcrypt';
+import session, { SessionData } from 'express-session';
 
-const path = require('path');
+declare module 'express-session' {
+    interface SessionData {
+      loggedIn?: boolean;
+      user?: CustomSessionUser;
+    }
+  }
+  
+  interface CustomSessionUser {
+    name?: string;
+    loggedIn?: boolean;
+    email?: string;
+    password1?: string;
+    password2?: string;
+    // Add other properties if necessary
+  }
+  
+  
 const app = express();
-const port = process.env.PORT || 8080
+const port = process.env.PORT || 8080;
 
-app.use(express.urlencoded({extended: true}));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
-app.set("port", 3000);
-app.set('views', path.join(__dirname, '..', 'views'))
+app.set('port', 3000);
+app.set('views', path.join(__dirname, '..', 'views'));
 
-app.set("view engine", "ejs");
+app.set('view engine', 'ejs');
 
-//start landing
-app.get('/', (_req: Request, res: Response) => {
-    res.render('landingpage')
-  })
-//end landing
-
-
-//contact start
-app.get("/contact", (_req: Request, res: Response) =>{
-    res.render('contact');
+// Database login/register start
+const loginSchema = new mongoose.Schema({
+    name: String,
+    email: String,
+    password1: String,
+    password2: String,
 });
 
-app.post("/contact", (req, res) => {
+const LoginModel = mongoose.model('login', loginSchema);
 
-    console.log(req.body);
+mongoose
+    .connect('mongodb+srv://oogwavy:Internationaal_95@database.n6kinc2.mongodb.net/Internationaal', {
+        connectTimeoutMS: 5000,
+        socketTimeoutMS: 45000,
+        serverSelectionTimeoutMS: 5000,
+        dbName: 'Internationaal',
+    })
+    .then(() => {
+        console.log('Connected to MongoDB');
+    })
+    .catch((error) => {
+        console.log('Error in Connecting to Database: ', error);
+    });
 
-});
-//contact end
+// Configure session
+app.use(
+    session({
+        secret: 'k|*.FGu7,R@aBV0WL(y;Xg&dj*L$i7jc&>+q!befp4xh-!2lC9#`M&aT84]oxGq',
+        resave: false,
+        saveUninitialized: false,
+    })
+);
 
-
-//login start
-app.get("/login", (req, res) =>{
-    res.render("login");
-});
-
-app.post("/login", (req, res) => {
-
-    console.log(req.body);
-
-});
-//login end
-
-
-//register start
-app.get("/register", (req, res) =>{
-    res.render("register");
-});
-
-app.post("/register", (req, res) => {
-
-    console.log(req.body);
-
-});
-//register end
-
-
-//about start
-app.get("/about", (_req: Request, res: Response) =>{
-    res.render('about');
+// Register start
+app.get('/register', (_req: Request, res: Response) => {
+    res.set({
+        'Allow-access-Allow-Origin': '*',
+    });
+    res.render('register', { user: _req.session.user });
 });
 
-//about end
 
+app.post('/register', async (req, res) => {
+    const name = req.body.name;
+    const email = req.body.email;
+    const password1 = req.body.password1;
+    const password2 = req.body.password2;
 
-//quiz_selection start
-app.get("/quiz_selection", (_req: Request, res: Response) =>{
-    res.render('quiz_selection');
+    if (password1 !== password2) {
+        // Passwords do not match
+        res.render('register', { error: 'Passwords do not match' }); // Render the registration page with an error message
+        return;
+    }
+
+    try {
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(password1, saltRounds);
+
+        const data = {
+            name: name,
+            email: email,
+            password1: hashedPassword,
+        };
+
+        const LoginModel = mongoose.model('login');
+        const result = await LoginModel.create(data);
+
+        console.log('Record Inserted Successfully');
+        res.redirect('/');
+    } catch (err) {
+        console.error(err);
+        res.render('register', { error: 'An error occurred during registration' }); // Render the registration page with an error message
+    }
 });
 
-//quiz_selection end
+// Register end
 
-
-//10_round start
-app.get("/10_round", (_req: Request, res: Response) =>{
-    res.render('10_round');
+// Login start
+app.get('/login', (_req: Request, res: Response) => {
+    res.render('login', { user: _req.session.user });
 });
 
-//10_round end
+app.post('/login', async (req, res) => {
+    const email = req.body.email;
+    const password = req.body.password;
 
+    try {
+        const LoginModel = mongoose.model('login');
+        const user = await LoginModel.findOne({ email: email });
+        if (!user) {
+            // User not found
+            console.log('Invalid email or password');
+            res.render('login', { error: 'Invalid email or password', email: '' }); // Render the login page with an error message and cleared email field
+            return;
+        }
 
-//10_round_endscore start
-app.get("/10_round_endscore", (_req: Request, res: Response) =>{
-    res.render('10_round_endscore');
+        const passwordMatch = await bcrypt.compare(password, user.password1);
+
+        if (!passwordMatch) {
+            // Password doesn't match
+            console.log('Invalid email or password');
+            res.render('login', { error: 'Invalid email or password', email: '' }); // Render the login page with an error message and cleared email field
+            return;
+        }
+
+        // Initialize user object if it doesn't exist
+        req.session.user = {
+            name: user.name,
+            loggedIn: true,
+            email: user.email,
+        };
+
+        // Update the session object with loggedIn and user properties
+        req.session.loggedIn = true;
+        req.session.user.loggedIn = true; // Set loggedIn property to true
+
+        console.log('Login successful');
+        // Perform any other necessary actions for a successful login
+
+        res.redirect('/'); // Redirect the user to the desired page after successful login
+    } catch (err) {
+        console.error(err);
+        res.redirect('/login'); // Redirect the user back to the login page or show an error message
+    }
+});
+// Login end
+
+// Logout
+app.get('/logout', (req, res) => {
+    // Destroy the session to remove all session data
+    req.session.destroy((err) => {
+        if (err) {
+            console.error('Error destroying session:', err);
+        } else {
+            console.log('Logout successful');
+        }
+        res.redirect('/'); // Redirect the user to the desired page after logout
+    });
 });
 
-//10_round_endscore end
+// Database login/register end
 
+// Start landing
+app.get('/', (req, res) => {
+    res.render('landingpage', { user: req.session.user });
+});
+// End landing
 
-//sudden_death start
+// Contact start
+
+const contactSchema = new mongoose.Schema({
+    name: String,
+    email: String,
+    message: String,
+});
+
+const ContactModel = mongoose.model('Contact', contactSchema, 'contact');
+app.get('/contact', (_req: Request, res: Response) => {
+    res.render('contact', { user: _req.session.user });
+});
+
+app.post('/contact', (req, res) => {
+    const { name, email, message } = req.body;
+
+    // Create a new document using the ContactModel
+    const contact = new ContactModel({
+        name: name,
+        email: email,
+        message: message,
+    });
+
+    // Save the document to MongoDB
+    contact.save()
+        .then(() => {
+            console.log('Contact message saved successfully');
+            res.redirect('/'); // Redirect to the homepage or another page after saving
+        })
+        .catch((error) => {
+            console.error('Error saving contact message:', error);
+            res.redirect('/contact'); // Redirect back to the contact page or show an error message
+        });
+});
+// Contact end
+
+// About start
+app.get('/about', (_req: Request, res: Response) => {
+    res.render('about', { user: _req.session.user });
+});
+// About end
+
+// Quiz selection start
+app.get('/quiz_selection', (_req: Request, res: Response) => {
+    res.render('quiz_selection', { user: _req.session.user });
+});
+// Quiz selection end
+
+// 10_round start
+app.get('/10_round', (_req: Request, res: Response) => {
+    res.render('10_round', { user: _req.session.user });
+});
+// 10_round end
+
+// 10_round_endscore start
+app.get('/10_round_endscore', (_req: Request, res: Response) => {
+    res.render('10_round_endscore', { user: _req.session.user });
+});
+// 10_round_endscore end
+
+// Sudden death start
 app.use(express.static(path.join(__dirname, 'views/js')));
 
-app.get("/sudden_death", (_req: Request, res: Response) =>{
-    res.render('sudden_death', {
-    })
+app.get('/sudden_death', (_req: Request, res: Response) => {
+    res.render('sudden_death', { user: _req.session.user });
 });
-//sudden_death end
+// Sudden death end
 
-
-//suddendeath_endscore start
-app.get("/suddendeath_endscore", (_req: Request, res: Response) =>{
+// Sudden death end score start
+app.get('/suddendeath_endscore', (_req: Request, res: Response) => {
     res.render('suddendeath_endscore');
 });
+// Sudden death end score end
 
-//suddendeath_endscore end
-
-
-//whitelist start
-app.get("/whitelist", (_req: Request, res: Response) =>{
-    res.render('whitelist');
+// Whitelist start
+app.get('/whitelist', (_req: Request, res: Response) => {
+    res.render('whitelist', { user: _req.session.user });
 });
+// Whitelist end
 
-//whitelist end
-
-
-//blacklist start
-app.get("/blacklist", (_req: Request, res: Response) =>{
-    res.render('blacklist');
+// Blacklist start
+app.get('/blacklist', (_req: Request, res: Response) => {
+    res.render('blacklist', { user: _req.session.user });
 });
-
-//blacklist end
-
-
+// Blacklist end
 
 app.listen(port, () => {
-    return console.log(`Server is listening on ${port}`)
-  })
+    console.log('Listening on PORT 8080');
+});
