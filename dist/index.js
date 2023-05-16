@@ -47,6 +47,11 @@ app.get("/about", function (_req, res) {
     res.render('about');
 });
 //about end
+//quiz_selection start
+app.get("/quiz_selection", function (_req, res) {
+    res.render('quiz_selection');
+});
+//quiz_selection end
 app.listen(port, function () {
     return console.log("Server is listening on ".concat(port));
 });

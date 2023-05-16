@@ -63,6 +63,14 @@ app.get("/about", (_req: Request, res: Response) =>{
 
 //about end
 
+//quiz_selection start
+app.get("/quiz_selection", (_req: Request, res: Response) =>{
+    res.render('quiz_selection');
+});
+
+//quiz_selection end
+
+
 app.listen(port, () => {
     return console.log(`Server is listening on ${port}`)
   })
