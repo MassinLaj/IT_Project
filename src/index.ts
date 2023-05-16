@@ -32,6 +32,7 @@ app.post("/contact", (req, res) => {
 });
 //contact end
 
+
 //login start
 app.get("/login", (req, res) =>{
     res.render("login");
@@ -43,6 +44,7 @@ app.post("/login", (req, res) => {
 
 });
 //login end
+
 
 //register start
 app.get("/register", (req, res) =>{
@@ -56,12 +58,14 @@ app.post("/register", (req, res) => {
 });
 //register end
 
+
 //about start
 app.get("/about", (_req: Request, res: Response) =>{
     res.render('about');
 });
 
 //about end
+
 
 //quiz_selection start
 app.get("/quiz_selection", (_req: Request, res: Response) =>{
@@ -78,6 +82,7 @@ app.get("/10_round", (_req: Request, res: Response) =>{
 
 //10_round end
 
+
 //10_round_endscore start
 app.get("/10_round_endscore", (_req: Request, res: Response) =>{
     res.render('10_round_endscore');
@@ -93,10 +98,15 @@ app.get("/sudden_death", (_req: Request, res: Response) =>{
     res.render('sudden_death', {
     })
 });
-
 //sudden_death end
 
 
+//suddendeath_endscore start
+app.get("/suddendeath_endscore", (_req: Request, res: Response) =>{
+    res.render('suddendeath_endscore');
+});
+
+//suddendeath_endscore end
 
 app.listen(port, () => {
     return console.log(`Server is listening on ${port}`)

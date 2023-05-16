@@ -68,6 +68,11 @@ app.get("/sudden_death", function (_req, res) {
     res.render('sudden_death', {});
 });
 //sudden_death end
+//suddendeath_endscore start
+app.get("/suddendeath_endscore", function (_req, res) {
+    res.render('suddendeath_endscore');
+});
+//suddendeath_endscore end
 app.listen(port, function () {
     return console.log("Server is listening on ".concat(port));
 });
