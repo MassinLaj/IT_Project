@@ -78,6 +78,12 @@ app.get("/10_round", (_req: Request, res: Response) =>{
 
 //10_round end
 
+//10_round_endscore start
+app.get("/10_round_endscore", (_req: Request, res: Response) =>{
+    res.render('10_round_endscore');
+});
+
+//10_round_endscore end
 
 app.listen(port, () => {
     return console.log(`Server is listening on ${port}`)

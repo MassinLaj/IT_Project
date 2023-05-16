@@ -57,6 +57,11 @@ app.get("/10_round", function (_req, res) {
     res.render('10_round');
 });
 //10_round end
+//10_round_endscore start
+app.get("/10_round_endscore", function (_req, res) {
+    res.render('10_round_endscore');
+});
+//10_round_endscore end
 app.listen(port, function () {
     return console.log("Server is listening on ".concat(port));
 });
