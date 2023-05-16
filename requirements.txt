@@ -8,3 +8,6 @@ npm install ts-node
 npm install @types/ejs
 npm install pre-commit
 npm install rimraf
+npm install bcrypt
+npm install mongodb
+npm install axios
