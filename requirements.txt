@@ -11,3 +11,5 @@ npm install rimraf
 npm install bcrypt
 npm install mongodb
 npm install axios
+npm install pkg
+npm install --save-dev @types/node

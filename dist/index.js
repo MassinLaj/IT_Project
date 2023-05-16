@@ -4,11 +4,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
+var path = require('path');
 var app = (0, express_1.default)();
 var port = process.env.PORT || 8080;
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use('/public', express_1.default.static('public'));
 app.set("port", 3000);
+app.set('views', path.join(__dirname, '..', 'views'));
 app.set("view engine", "ejs");
 //start landing
 app.get('/', function (_req, res) {
@@ -20,7 +22,7 @@ app.get('/ping', function (_req, res) {
 //end landing
 //contact start
 app.get("/contact", function (_req, res) {
-    res.render("../views/contact");
+    res.render('contact');
 });
 app.post("/contact", function (req, res) {
     console.log(req.body);

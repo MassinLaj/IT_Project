@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express'
 
+const path = require('path');
 const app = express();
 const port = process.env.PORT || 8080
 
@@ -7,6 +8,7 @@ app.use(express.urlencoded({extended: true}));
 app.use('/public', express.static('public'));
 
 app.set("port", 3000);
+app.set('views', path.join(__dirname, '..', 'views'))
 app.set("view engine", "ejs");
 
 //start landing
@@ -22,7 +24,7 @@ app.get('/', (_req: Request, res: Response) => {
 
 //contact start
 app.get("/contact", (_req: Request, res: Response) =>{
-    res.render("../views/contact");
+    res.render('contact');
 });
 
 app.post("/contact", (req, res) => {
