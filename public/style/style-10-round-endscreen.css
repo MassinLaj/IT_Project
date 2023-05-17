@@ -1,5 +1,9 @@
 body {
-  background-color: #e2ded6;
+  background-image: url(/media/images/clean_white_polygon_backgrounds_8_geeks_love_bacon.jpg);
+   background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  overflow:visible;
   height: 100%;
   width: 100%;
   display: flex;
@@ -7,6 +11,21 @@ body {
   justify-content: center;
   align-items: center;
 }
+
+main {
+  margin-top: 250px;
+  justify-content: center;
+}
+
+.navbar {
+  background-color: #393834;
+}
+
+footer{
+  background-color: #393834;
+  color: white;
+}
+
 /*  
 #393834
 #e2ded6

@@ -288,7 +288,7 @@ app.get('/sudden_death', function (_req, res) {
 // Sudden death end
 // Sudden death end score start
 app.get('/suddendeath_endscore', function (_req, res) {
-    res.render('suddendeath_endscore');
+    res.render('suddendeath_endscore', { user: _req.session.user });
 });
 // Sudden death end score end
 // Whitelist start
