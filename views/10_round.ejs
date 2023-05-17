@@ -16,9 +16,11 @@
   <!-- NAVBAR -->
   <%- include ("./partials/navbar") %>
 
-  <div class="container my-5">
-    <form action="" class="checkbox-group">
-      <h1 class="fw-bolder text-center">Match the quotes with a character and a movie</h1>
+  <div class="container">
+  <div class="row justify-content-center">
+    <div class="col-lg-4">
+      <form>
+        <h1 class="fw-bolder text-center mt-5">Match the quotes with a character and a movie</h1>
       <h2 class="lead text-center my-5" id="quote-name"></h2>
 
 
@@ -57,18 +59,27 @@
         <button type="button" class="btn" id="nr2" onclick="window.location.href='/10_round_endscore'"
           style="margin-top: 10px;">End Quiz</button>
       </section>
-    </form>
-
-    <div class="Favourite">
-      <div class="btn-group" role="group">
-        <button class="btn">&#11088</button>
-        <button class="btn">&#9940</button>
-      </div>
-      <div class="btn-group" role="group">
+      </form>
+      <div class="Favourite">
+         <div class="btn-group my-4" role="group">
         <button class="btn" id="score-button">Score: 0</button>
         <button class="btn" id="round-display"></button>
       </div>
+    </br>
+      <div class="btn-group my-5" role="group">
+        <button class="btn">&#11088</button>
+        <button class="btn">&#9940</button>
+      </div>
+     
     </div>
+    </div>
+  </div>
+</div>
+
+  
+    
+
+    
 
     <!-- FOOTER -->
     <%- include ("./partials/footer") %>
