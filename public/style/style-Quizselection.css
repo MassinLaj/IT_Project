@@ -1,5 +1,3 @@
-
-
 body {
   background-image: url(/media/images/clean_white_polygon_backgrounds_8_geeks_love_bacon.jpg);
   background-repeat: no-repeat;
@@ -26,14 +24,10 @@ body {
   resize: none;
 }
 
-.card {
-  cursor: pointer;
-}
-
-.card img {
-  width: 480px;
-  height: 220px;
-  pointer-events: none;
+img {
+  margin: 2%;
+  width: 30%;
+  height: 30%;
 }
 
 footer {
@@ -41,8 +35,10 @@ footer {
   color: white;
 }
 
-@media only screen and (max-width: 500px) {
-  .card img {
-    display: none;
+@media only screen and (max-width: 1000px) {
+  img {
+    margin: 2%;
+    width: 60%;
+    height: 60%;
   }
 }
