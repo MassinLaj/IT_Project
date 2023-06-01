@@ -26,18 +26,37 @@
 
     <!-- CARDS -->
 
+    <!-- MELDING BOX -->
+    <!-- Login Message Box -->
+    <div id="login-message" class="message-box hidden">
+      <div class="message-box-content">
+        <h3>You need to be logged in to access this feature.</h3>
+        <p>Please <a href="/login">login</a> or <a href="/register">register</a> to continue.</p>
+      </div>
+    </div>
 
+    <script>
+      function showLoginMessage() {
+        const loginMessage = document.getElementById('login-message');
+        loginMessage.classList.remove('hidden');
+      }
+    </script>
+
+    <!-- CARDS -->
     <div class="container mt-5">
       <div class="col-4 mx-auto">
         <div class="card <% if (!user || !user.loggedIn) { %>disabled <% } %>" <% if (user && user.loggedIn) { %>
-          onclick="window.location.href='/quiz_selection'"<% } %>>
-            <img src="media/logos/LOTR.png" class="img-fluid card-img-top" />
-            <div class="card-body">
-              <h5 class="card-title text-center">Lord Of The Rings</h5>
-            </div>
+          onclick="window.location.href='/quiz_selection'"<% } else { %>onclick="showLoginMessage()"<% } %>>
+              <img src="media/logos/LOTR.png" class="img-fluid card-img-top" />
+              <div class="card-body">
+                <h5 class="card-title text-center">Lord Of The Rings</h5>
+              </div>
         </div>
       </div>
     </div>
+
+
+
 
 
 
