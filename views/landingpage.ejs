@@ -24,42 +24,44 @@
       </div>
     </section>
 
+
     <!-- CARDS -->
-
-
     <div class="container mt-5">
       <div class="col-4 mx-auto">
         <div class="card <% if (!user || !user.loggedIn) { %>disabled <% } %>" <% if (user && user.loggedIn) { %>
-          onclick="window.location.href='/quiz_selection'"<% } %>>
-            <img src="media/logos/LOTR.png" class="img-fluid card-img-top" />
-            <div class="card-body">
-              <h5 class="card-title text-center">Lord Of The Rings</h5>
-            </div>
+          onclick="window.location.href='/quiz_selection'"<% } else { %>onclick="showLoginMessage()"<% } %>>
+              <img src="media/logos/LOTR.png" class="img-fluid card-img-top" />
+              <div class="card-body">
+                <h5 class="card-title text-center">Lord Of The Rings</h5>
+              </div>
         </div>
       </div>
     </div>
 
 
 
+
     <div class="container mt-5">
       <div class="row row-cols-1 row-cols-md-3 justify-content-center">
         <div class="col">
-          <div class="card">
-            <img
-              src="https://imageio.forbes.com/specials-images/imageserve/604f6b5c00178ba3ac7dc066/Fortnite/960x0.jpg?format=jpg&width=960"
-              class="img-fluid card-img-top" />
-            <div class="card-body">
-              <h5 class="card-title text-center">Fortnite</h5>
-            </div>
+          <div class="card"
+          <% if (user && user.loggedIn) { %> onclick="window.location.href='/'"<% } else { %> onclick="showMAINTENANCEMessage()"<% } %>>
+                <img
+                  src="https://imageio.forbes.com/specials-images/imageserve/604f6b5c00178ba3ac7dc066/Fortnite/960x0.jpg?format=jpg&width=960"
+                  class="img-fluid card-img-top" />
+                <div class="card-body">
+                  <h5 class="card-title text-center">Fortnite</h5>
+                </div>
           </div>
         </div>
         <div class="col">
-          <div class="card">
-            <img src="https://thesportsgrail.com/wp-content/uploads/2022/03/FIFA-23-stock-1-min.jpg"
-              class="img-fluid card-img-top" />
-            <div class="card-body">
-              <h5 class="card-title text-center">FIFA</h5>
-            </div>
+          <div class="card"
+          <% if (user && user.loggedIn) { %> onclick="window.location.href='/'"<% } else { %> onclick="showMAINTENANCEMessage()"<% } %>>
+                <img src="https://thesportsgrail.com/wp-content/uploads/2022/03/FIFA-23-stock-1-min.jpg"
+                  class="img-fluid card-img-top" />
+                <div class="card-body">
+                  <h5 class="card-title text-center">FIFA</h5>
+                </div>
           </div>
         </div>
       </div>
@@ -67,21 +69,24 @@
       <div class="container mt-5">
         <div class="row row-cols-1 row-cols-md-3 justify-content-center">
           <div class="col">
-            <div class="card">
-              <img src="https://img.lemde.fr/2022/12/22/5/0/1730/865/768/384/75/0/e968e4d_1671703423578-b5e.jpeg"
-                class="img-fluid card-img-top" />
-              <div class="card-body">
-                <h5 class="card-title text-center">POKEMON</h5>
-              </div>
+            <div class="card"
+              <% if (user && user.loggedIn) { %> onclick="window.location.href='/'"<% } else { %> onclick="showMAINTENANCEMessage()"<% } %>>
+                    <img src="https://img.lemde.fr/2022/12/22/5/0/1730/865/768/384/75/0/e968e4d_1671703423578-b5e.jpeg"
+                      class="img-fluid card-img-top" />
+                    <div class="card-body">
+                      <h5 class="card-title text-center">POKEMON</h5>
+                    </div>
             </div>
           </div>
+
           <div class="col">
-            <div class="card">
-              <img src="https://cdn.geekwire.com/wp-content/uploads/2020/04/legomasters.jpg"
-                class="img-fluid card-img-top" />
-              <div class="card-body">
-                <h5 class="card-title text-center">LEGO MASTERS</h5>
-              </div>
+            <div class="card"
+              <% if (user && user.loggedIn) { %> onclick="window.location.href='/'"<% } else { %> onclick="showMAINTENANCEMessage()"<% } %>>
+                    <img src="https://cdn.geekwire.com/wp-content/uploads/2020/04/legomasters.jpg"
+                      class="img-fluid card-img-top" />
+                    <div class="card-body">
+                      <h5 class="card-title text-center">LEGO MASTERS</h5>
+                    </div>
             </div>
           </div>
         </div>
@@ -89,25 +94,55 @@
         <div class="container mt-5">
           <div class="row row-cols-1 row-cols-md-3 justify-content-center">
             <div class="col">
-              <div class="card">
-                <img src="https://www.nbb.be/sites/nbb.be/files/socialsharefacebook.png"
-                  class="img-fluid card-img-top" />
-                <div class="card-body">
-                  <h5 class="card-title text-center">NNB</h5>
-                </div>
+              <div class="card"
+                <% if (user && user.loggedIn) { %> onclick="window.location.href='/'"<% } else { %> onclick="showMAINTENANCEMessage()"<% } %>>
+                      <img src="https://www.nbb.be/sites/nbb.be/files/socialsharefacebook.png"
+                        class="img-fluid card-img-top" />
+                      <div class="card-body">
+                        <h5 class="card-title text-center">NNB</h5>
+                      </div>
               </div>
             </div>
+
             <div class="col">
-              <div class="card">
-                <img src="https://1000logos.net/wp-content/uploads/2022/10/Magic-The-Gathering-logo.png"
-                  class="img-fluid card-img-top" />
-                <div class="card-body">
-                  <h5 class="card-title text-center">MTG</h5>
-                </div>
+              <div class="card"
+                <% if (user && user.loggedIn) { %> onclick="window.location.href='/'"<% } else { %> onclick="showMAINTENANCEMessage()"<% } %>>
+                      <img src="https://1000logos.net/wp-content/uploads/2022/10/Magic-The-Gathering-logo.png"
+                        class="img-fluid card-img-top" />
+                      <div class="card-body">
+                        <h5 class="card-title text-center">MTG</h5>
+                      </div>
               </div>
             </div>
           </div>
 
+          <!-- NOTIFACTIE NIET INGELOGD-->
+          <div id="login-message" class="message-box hidden">
+            <div class="message-box-content">
+              <h3>You need to be logged in to access this feature.</h3>
+              <p>Please <a href="/login">login</a> or <a href="/register">register</a> to continue.</p>
+            </div>
+          </div>
+
+          <!-- NOTIFACTIE UNDER MAINTENANCE -->
+          <div id="MAINTENANCE-message" class="message-box hidden">
+            <div class="message-box-content">
+              <h1>UNDER MAINTANANCE</h1>
+              <p><a href="/">RETURN</a></p>
+            </div>
+          </div>
+
+          <script>
+            function showLoginMessage() {
+              const loginMessage = document.getElementById('login-message');
+              loginMessage.classList.remove('hidden');
+            }
+
+            function showMAINTENANCEMessage() {
+              const loginMessage = document.getElementById('MAINTENANCE-message');
+              loginMessage.classList.remove('hidden');
+            }
+          </script>
 
 
           <!-- FOOTER -->
