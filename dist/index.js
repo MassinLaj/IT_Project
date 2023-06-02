@@ -84,6 +84,7 @@ var loginSchema = new mongoose.Schema({
     email: String,
     password1: String,
     password2: String,
+    favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Favorites' }], // so a person can have multiple favorites character quotes
 });
 var LoginModel = mongoose.model('login', loginSchema);
 mongoose
@@ -288,14 +289,103 @@ app.get('/sudden_death', function (_req, res) {
 // Sudden death end
 // Sudden death end score start
 app.get('/suddendeath_endscore', function (_req, res) {
-    res.render('suddendeath_endscore', { user: _req.session.user });
+    res.render('suddendeath_endscore');
 });
 // Sudden death end score end
-// Whitelist start
-app.get('/whitelist', function (_req, res) {
-    res.render('whitelist', { user: _req.session.user });
+// Middleware to check if user is logged in
+var checkLoggedIn = function (req, res, next) {
+    if (req.session.loggedIn) {
+        // User is logged in, proceed to the next middleware or route handler
+        next();
+    }
+    else {
+        // User is not logged in, redirect to the login page or show an error message
+        res.redirect('/login'); // Assuming you have a login page at '/login'
+    }
+};
+// Definieer een schema voor de opgeslagen personages
+var favoritesSchema = new mongoose.Schema({
+    name: String,
+    quote: String,
 });
+// Definieer een model op basis van het schema
+var Favorites = mongoose.model('Favorites', favoritesSchema);
+//voor het verwijderen van quotes
+app.post('/remove-quote', checkLoggedIn, function (req, res) {
+    var _a, _b;
+    // Retrieve the quote to be removed from the request body
+    var quoteIndex = req.body.quoteIndex;
+    // Retrieve the favorite quotes from the user's session
+    var favorites = (_b = (_a = req.session.user) === null || _a === void 0 ? void 0 : _a.name) !== null && _b !== void 0 ? _b : [];
+    // Remove the quote from the favorites list based on the index
+    if (Array.isArray(favorites) && favorites.length > quoteIndex) {
+        favorites.splice(quoteIndex, 1);
+    }
+    // Redirect back to the whitelist page
+    res.redirect('/whitelist');
+});
+//einde verwijderen van quotes
+// Whitelist start
+// Whitelist route with the checkLoggedIn middleware
+app.get('/whitelist', checkLoggedIn, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var userId, user, favorites, error_1;
+    var _a, _b;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
+            case 0:
+                _c.trys.push([0, 2, , 3]);
+                userId = (_b = (_a = req.session.user) === null || _a === void 0 ? void 0 : _a.name) !== null && _b !== void 0 ? _b : '';
+                return [4 /*yield*/, LoginModel.findById(userId).populate('favorites')];
+            case 1:
+                user = _c.sent();
+                if (!user) {
+                    throw new Error('User not found');
+                }
+                favorites = user.favorites;
+                // Pass the favorites to the view
+                res.render('whitelist', { user: req.session.user, favorites: favorites });
+                return [3 /*break*/, 3];
+            case 2:
+                error_1 = _c.sent();
+                console.error('Error retrieving favorites:', error_1.message);
+                res.status(500).send('Error retrieving favorites');
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); });
 // Whitelist end
+app.get('/download-quotes', checkLoggedIn, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var userId, user, favorites, content;
+    var _a, _b;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
+            case 0:
+                userId = (_b = (_a = req.session.user) === null || _a === void 0 ? void 0 : _a.name) !== null && _b !== void 0 ? _b : '';
+                return [4 /*yield*/, LoginModel.findById(userId).populate('favorites')];
+            case 1:
+                user = _c.sent();
+                if (!user) {
+                    throw new Error('User not found');
+                }
+                favorites = user.favorites;
+                if (!favorites || favorites.length === 0) {
+                    // If no favorite quotes are found, redirect or display an error message
+                    res.redirect('/whitelist');
+                    return [2 /*return*/];
+                }
+                content = favorites.map(function (favorite) {
+                    //  return `${favorite.name}: ${favorite.quote}`;  HIER IS EEN FOUT!
+                }).join('\n');
+                // Set the response headers to indicate a text file download
+                res.setHeader('Content-disposition', 'attachment; filename=quotes.txt');
+                res.setHeader('Content-type', 'text/plain');
+                // Send the content as the response
+                res.send(content);
+                return [2 /*return*/];
+        }
+    });
+}); });
 // Blacklist start
 app.get('/blacklist', function (_req, res) {
     res.render('blacklist', { user: _req.session.user });
