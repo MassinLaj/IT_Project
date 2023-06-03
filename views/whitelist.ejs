@@ -15,7 +15,6 @@
   </head>
 
   <body>
-    
     <!-- NAVBAR -->
     <%- include ("./partials/navbar") %>
 
@@ -34,16 +33,9 @@
             <div class="container mt-5">
               <div class="col-4 mx-auto">
                 <div class="card" onclick="window.location.href=''">
-                  <img
-                    src="media/images/Frodo.png"
-                    class="img-fluid card-img-top"
-                  />
                   <div class="card-body">
-                    <h1>Frodo Baggins</h1>
-                    <quote
-                      >“Short cuts make delays, but inns make longer
-                      ones.”</quote
-                    >
+                    <h1 id="chosen-character"></h1>
+                    <quote id="chosen-quote"> </quote>
                   </div>
                 </div>
               </div>
@@ -53,7 +45,6 @@
       </section>
     </main>
 
-    
     <!-- FOOTER -->
     <%- include ("./partials/footer") %>
   </body>
