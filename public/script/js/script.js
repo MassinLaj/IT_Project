@@ -78,29 +78,31 @@ function resetScore() {
   updateRoundDisplay(0);
 }
 
-
-const apiKey = 'k43ZUHBw7jA5D0wxGFtS';
-const quoteContainer = document.getElementById('quote-name');
-const charactersContainer = document.getElementById('character-name');
-const moviesContainer = document.getElementById('related-movie');
-const characterOption1 = document.getElementById('character-name2');
-const characterOption2 = document.getElementById('character-name3');
-const movieOption1 = document.getElementById('movie-name2');
-const movieOption2 = document.getElementById('movie-name3');
+const apiKey = "k43ZUHBw7jA5D0wxGFtS";
+const quoteContainer = document.getElementById("quoteName");
+const charactersContainer = document.getElementById("character-name");
+const moviesContainer = document.getElementById("related-movie");
+const characterOption1 = document.getElementById("character-name2");
+const characterOption2 = document.getElementById("character-name3");
+const movieOption1 = document.getElementById("movie-name2");
+const movieOption2 = document.getElementById("movie-name3");
+const hiddenInput = document.getElementById("hiddeninput");
 
 // Retrieve a random quote
-fetch('https://the-one-api.dev/v2/quote', {
+fetch("https://the-one-api.dev/v2/quote", {
   headers: {
-    'Authorization': `Bearer ${apiKey}`
-  }
+    Authorization: `Bearer ${apiKey}`,
+  },
 })
-  .then(response => response.json())
-  .then(data => {
+  .then((response) => response.json())
+  .then((data) => {
     const randomIndex = Math.floor(Math.random() * data.docs.length);
     const quote = data.docs[randomIndex].dialog;
+    sessionStorage.setItem("quote", quote);
     const characterId = data.docs[randomIndex].character;
     const movieId = data.docs[randomIndex].movie;
     quoteContainer.innerText = quote;
+    hiddenInput.value = quote;
 
     // Retrieve character
     fetch(`https://the-one-api.dev/v2/character/${characterId}`, {
@@ -142,20 +144,19 @@ fetch('https://the-one-api.dev/v2/quote', {
 function generateRandomCharacterOptions(excludeCharacterId) {
   fetch(`https://the-one-api.dev/v2/character?limit=2`, {
     headers: {
-
-      'Authorization': `Bearer ${apiKey}`
-    }
+      Authorization: `Bearer ${apiKey}`,
+    },
   })
-    .then(response => response.json())
-    .then(data => {
+    .then((response) => response.json())
+    .then((data) => {
       const options = data.docs
-        .filter(doc => doc._id !== excludeCharacterId)
-        .map(doc => doc.name);
+        .filter((doc) => doc._id !== excludeCharacterId)
+        .map((doc) => doc.name);
       characterOption1.innerHTML = options[0];
       characterOption2.innerHTML = options[1];
     })
-    .catch(error => {
-      console.log('Error:', error);
+    .catch((error) => {
+      console.log("Error:", error);
     });
 }
 
@@ -163,19 +164,19 @@ function generateRandomCharacterOptions(excludeCharacterId) {
 function generateRandomMovieOptions(excludeMovieId) {
   fetch(`https://the-one-api.dev/v2/movie?limit=2`, {
     headers: {
-      'Authorization': `Bearer ${apiKey}`
-    }
+      Authorization: `Bearer ${apiKey}`,
+    },
   })
-    .then(response => response.json())
-    .then(data => {
+    .then((response) => response.json())
+    .then((data) => {
       const options = data.docs
-        .filter(doc => doc._id !== excludeMovieId)
-        .map(doc => doc.name);
+        .filter((doc) => doc._id !== excludeMovieId)
+        .map((doc) => doc.name);
       movieOption1.innerHTML = options[0];
       movieOption2.innerHTML = options[1];
     })
-    .catch(error => {
-      console.log('Error:', error);
+    .catch((error) => {
+      console.log("Error:", error);
     });
 
 }
@@ -211,6 +212,7 @@ localStorage.removeItem('roundCount');
 // Om quote meetegeven in post request voor blacklist
 // Van h2 kan niet worden gestuurd via req.body by name enkel me input,select of textarea tag
 // daarom deze huidige workaround
+
 
 const headingValue = document.getElementById("quoteName").textContent;
 document.getElementById("hiddeninput").value = headingValue;

@@ -15,7 +15,6 @@
   </head>
 
   <body>
-    
     <!-- NAVBAR -->
     <%- include ("./partials/navbar") %>
 
@@ -34,6 +33,11 @@
             <div class="container mt-5">
               <div class="col-4 mx-auto">
                 <div class="card" onclick="window.location.href=''">
+                  <div class="card-body">
+                    <h1 id="chosen-character"></h1>
+                    <quote id="chosen-quote"> </quote>
+                  </div>
+
                   <!-- whitelist.ejs -->
 
                   <!-- Add this section to display the favorite characters -->
@@ -55,7 +59,6 @@
                       <p>No favorite characters found.</p>
                     <% } %>
                   </section>
-
                 </div>
               </div>
             </div>
@@ -64,7 +67,6 @@
       </section>
     </main>
 
-    
     <!-- FOOTER -->
     <%- include ("./partials/footer") %>
   </body>
