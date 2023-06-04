@@ -82,7 +82,7 @@ function resetScore() {
 
 
 const apiKey = 'k43ZUHBw7jA5D0wxGFtS';
-const quoteContainer = document.getElementById('quote-name');
+const quoteContainer = document.getElementById('quoteName');
 const charactersContainer = document.getElementById('character-name');
 const moviesContainer = document.getElementById('related-movie');
 const characterOption1 = document.getElementById('character-name2');
@@ -190,3 +190,9 @@ localStorage.removeItem('score');
 localStorage.removeItem('roundCount');
 
 
+// Om quote meetegeven in post request voor blacklist
+// Van h2 kan niet worden gestuurd via req.body by name enkel me input,select of textarea tag
+// daarom deze huidige workaround
+
+const headingValue = document.getElementById("quoteName").textContent;
+document.getElementById("hiddeninput").value = headingValue;
