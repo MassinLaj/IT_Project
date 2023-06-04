@@ -1,5 +1,7 @@
 function disableOtherCharacters(checkbox) {
-  const characterCheckboxes = document.querySelectorAll('input[name="character"]');
+  const characterCheckboxes = document.querySelectorAll(
+    'input[name="character"]'
+  );
   characterCheckboxes.forEach((charCheckbox) => {
     if (charCheckbox !== checkbox) {
       charCheckbox.disabled = checkbox.checked;
@@ -16,67 +18,63 @@ function disableOtherMovies(checkbox) {
 }
 
 function submitAnswer() {
-  
-  const characterCheckbox = document.querySelector('input[name="character"]:checked');
+  const characterCheckbox = document.querySelector(
+    'input[name="character"]:checked'
+  );
   const movieCheckbox = document.querySelector('input[name="movie"]:checked');
-  
+
   let roundScore = 0;
-  
+
   if (characterCheckbox && movieCheckbox) {
     if (
-      characterCheckbox.value === 'character-name' &&
-      movieCheckbox.value === 'relevant-movie'
+      characterCheckbox.value === "character-name" &&
+      movieCheckbox.value === "relevant-movie"
     ) {
       roundScore = 1;
     } else if (
-      characterCheckbox.value === 'character-name' ||
-      movieCheckbox.value === 'relevant-movie'
+      characterCheckbox.value === "character-name" ||
+      movieCheckbox.value === "relevant-movie"
     ) {
       roundScore = 0.5;
     }
   }
-  
-  const currentScore = parseFloat(localStorage.getItem('score')) || 0;
+
+  const currentScore = parseFloat(localStorage.getItem("score")) || 0;
   const newScore = currentScore + roundScore;
 
-  localStorage.setItem('score', newScore);
-  document.getElementById('score-button').textContent = `Score: ${newScore}`;
+  localStorage.setItem("score", newScore);
+  document.getElementById("score-button").textContent = `Score: ${newScore}`;
 
-  const roundCount = parseInt(localStorage.getItem('roundCount')) || 0;
-  localStorage.setItem('roundCount', roundCount + 1);
+  const roundCount = parseInt(localStorage.getItem("roundCount")) || 0;
+  localStorage.setItem("roundCount", roundCount + 1);
 
   updateRoundDisplay(roundCount + 1);
 
   if (roundCount === 9) {
-    
     document.getElementById("SubmitNR").disabled = true;
     document.getElementById("nr2").disabled = false;
-  } 
+  }
 }
 
-
-
 function updateRoundDisplay(roundCount) {
-  const roundDisplay = document.getElementById('round-display');
+  const roundDisplay = document.getElementById("round-display");
   roundDisplay.textContent = `Round: ${roundCount}`;
 }
 
+window.addEventListener("DOMContentLoaded", () => {
+  const currentScore = parseFloat(localStorage.getItem("score")) || 0;
+  document.getElementById(
+    "score-button"
+  ).textContent = `Score: ${currentScore}`;
 
-window.addEventListener('DOMContentLoaded', () => {
-  const currentScore = parseFloat(localStorage.getItem('score')) || 0;
-  document.getElementById('score-button').textContent = `Score: ${currentScore}`;
-
-  const roundCount = parseInt(localStorage.getItem('roundCount')) || 0;
+  const roundCount = parseInt(localStorage.getItem("roundCount")) || 0;
   updateRoundDisplay(roundCount);
-
-  
 });
 
-
 function resetScore() {
-  localStorage.removeItem('score');
-  localStorage.removeItem('roundCount');
-  document.getElementById('score-button').textContent = 'Score: 0';
+  localStorage.removeItem("score");
+  localStorage.removeItem("roundCount");
+  document.getElementById("score-button").textContent = "Score: 0";
   updateRoundDisplay(0);
 }
 
@@ -107,43 +105,44 @@ fetch('https://the-one-api.dev/v2/quote', {
     // Retrieve character
     fetch(`https://the-one-api.dev/v2/character/${characterId}`, {
       headers: {
-        'Authorization': `Bearer ${apiKey}`
-      }
+        Authorization: `Bearer ${apiKey}`,
+      },
     })
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         const character = data.docs[0].name;
         charactersContainer.innerHTML = character;
         generateRandomCharacterOptions(characterId);
       })
-      .catch(error => {
-        console.log('Error:', error);
+      .catch((error) => {
+        console.log("Error:", error);
       });
 
     // Retrieve movie
     fetch(`https://the-one-api.dev/v2/movie/${movieId}`, {
       headers: {
-        'Authorization': `Bearer ${apiKey}`
-      }
+        Authorization: `Bearer ${apiKey}`,
+      },
     })
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         const movie = data.docs[0].name;
         moviesContainer.innerHTML = movie;
         generateRandomMovieOptions(movieId);
       })
-      .catch(error => {
-        console.log('Error:', error);
+      .catch((error) => {
+        console.log("Error:", error);
       });
   })
-  .catch(error => {
-    console.log('Error:', error);
+  .catch((error) => {
+    console.log("Error:", error);
   });
 
 // Generate random character options
 function generateRandomCharacterOptions(excludeCharacterId) {
   fetch(`https://the-one-api.dev/v2/character?limit=2`, {
     headers: {
+
       'Authorization': `Bearer ${apiKey}`
     }
   })
@@ -178,8 +177,28 @@ function generateRandomMovieOptions(excludeMovieId) {
     .catch(error => {
       console.log('Error:', error);
     });
+
 }
 
+// Generate random movie options
+function generateRandomMovieOptions(excludeMovieId) {
+  fetch(`https://the-one-api.dev/v2/movie?limit=2`, {
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      const options = data.docs
+        .filter((doc) => doc._id !== excludeMovieId)
+        .map((doc) => doc.name);
+      movieOption1.innerHTML = options[0];
+      movieOption2.innerHTML = options[1];
+    })
+    .catch((error) => {
+      console.log("Error:", error);
+    });
+}
 
 
 const correctAnswersEl = document.querySelector('.circle-subtext1');
@@ -189,4 +208,9 @@ aantalAntwoorden.textContent = `Total questions:  ${localStorage.getItem("roundC
 localStorage.removeItem('score');
 localStorage.removeItem('roundCount');
 
+// Om quote meetegeven in post request voor blacklist
+// Van h2 kan niet worden gestuurd via req.body by name enkel me input,select of textarea tag
+// daarom deze huidige workaround
 
+const headingValue = document.getElementById("quoteName").textContent;
+document.getElementById("hiddeninput").value = headingValue;

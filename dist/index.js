@@ -84,6 +84,7 @@ var loginSchema = new mongoose.Schema({
     email: String,
     password1: String,
     password2: String,
+    favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Favorites' }], // so a person can have multiple favorites character quotes
 });
 var LoginModel = mongoose.model('login', loginSchema);
 mongoose
@@ -293,15 +294,161 @@ app.get('/suddendeath_endscore', function (_req, res) {
     res.render('suddendeath_endscore');
 });
 // Sudden death end score end
-// Whitelist start
-app.get('/whitelist', function (_req, res) {
-    res.render('whitelist', { user: _req.session.user });
+// Middleware to check if user is logged in
+var checkLoggedIn = function (req, res, next) {
+    if (req.session.loggedIn) {
+        // User is logged in, proceed to the next middleware or route handler
+        next();
+    }
+    else {
+        // User is not logged in, redirect to the login page or show an error message
+        res.redirect('/login'); // Assuming you have a login page at '/login'
+    }
+};
+// Definieer een schema voor de opgeslagen personages
+var favoritesSchema = new mongoose.Schema({
+    name: String,
+    quote: String,
 });
+// Definieer een model op basis van het schema
+var Favorites = mongoose.model('Favorites', favoritesSchema);
+//voor het verwijderen van quotes
+app.post('/remove-quote', checkLoggedIn, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var quoteIndex, username, user, favorites;
+    var _a, _b;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
+            case 0:
+                quoteIndex = req.body.quoteIndex;
+                username = (_b = (_a = req.session.user) === null || _a === void 0 ? void 0 : _a.name) !== null && _b !== void 0 ? _b : '';
+                return [4 /*yield*/, LoginModel.findById(username).populate('favorites')];
+            case 1:
+                user = _c.sent();
+                if (!user) {
+                    throw new Error('User not found');
+                }
+                favorites = user.favorites;
+                // Remove the quote from the favorites list based on the index
+                if (Array.isArray(favorites) && favorites.length > quoteIndex) {
+                    favorites.splice(quoteIndex, 1);
+                }
+                // Redirect back to the whitelist page
+                res.redirect('/whitelist');
+                return [2 /*return*/];
+        }
+    });
+}); });
+//einde verwijderen van quotes
+// Whitelist start
+// Whitelist route with the checkLoggedIn middleware
+app.get('/whitelist', checkLoggedIn, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var username, user, favorites, error_1;
+    var _a, _b;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
+            case 0:
+                _c.trys.push([0, 2, , 3]);
+                username = (_b = (_a = req.session.user) === null || _a === void 0 ? void 0 : _a.name) !== null && _b !== void 0 ? _b : '';
+                return [4 /*yield*/, LoginModel.findOne({ name: username }).populate('favorites')];
+            case 1:
+                user = _c.sent();
+                if (!user) {
+                    throw new Error('User not found');
+                }
+                favorites = user.favorites;
+                // Pass the favorites to the view
+                res.render('whitelist', { user: req.session.user, favorites: favorites });
+                return [3 /*break*/, 3];
+            case 2:
+                error_1 = _c.sent();
+                console.error('Error retrieving favorites:', error_1.message);
+                res.status(500).send('Error retrieving favorites');
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); });
 // Whitelist end
+app.get('/download-quotes', checkLoggedIn, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var username, user;
+    var _a, _b;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
+            case 0:
+                username = (_b = (_a = req.session.user) === null || _a === void 0 ? void 0 : _a.name) !== null && _b !== void 0 ? _b : '';
+                return [4 /*yield*/, LoginModel.find({ name: username }, function (err, docs) {
+                        if (err) {
+                            console.error(err);
+                            return;
+                        }
+                        if (!user) {
+                            throw new Error('User not found');
+                        }
+                        // Extract the favorites from the user object
+                        var favorites = docs.map(function (doc) { return doc.favorites; });
+                        if (!favorites || favorites.length === 0) {
+                            // If no favorite quotes are found, redirect or display an error message
+                            res.redirect('/whitelist');
+                            return;
+                        }
+                        // Generate the content for the text file
+                        var content = favorites.map(function (favorite) {
+                            //  return `${favorite.name}: ${favorite.quote}`;  HIER IS EEN FOUT!
+                        }).join('\n');
+                        // Set the response headers to indicate a text file download
+                        res.setHeader('Content-disposition', 'attachment; filename=quotes.txt');
+                        res.setHeader('Content-type', 'text/plain');
+                        // Send the content as the response
+                        res.send(content);
+                    })];
+            case 1:
+                user = _c.sent();
+                return [2 /*return*/];
+        }
+    });
+}); });
 // Blacklist start
 app.get('/blacklist', function (_req, res) {
     res.render('blacklist', { user: _req.session.user });
 });
+// niet aanraken
+var blacklistSchema = new mongoose.Schema({
+    // Define the fields for the blacklist collection
+    quote: String,
+    reason: String,
+});
+// Create a model based on the schema
+var BlacklistModel = mongoose.model("Blacklist", blacklistSchema);
+app.post("/blacklist", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var data, document_1, error_2;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                data = {
+                    quote: req.body.quoteName,
+                    reason: req.body.complaint
+                    // Extract other fields as necessary
+                };
+                document_1 = new BlacklistModel(data);
+                // Save the document to MongoDB
+                return [4 /*yield*/, document_1.save()];
+            case 1:
+                // Save the document to MongoDB
+                _a.sent();
+                console.log('Document saved to "blacklist" collection:', document_1);
+                res.redirect("/"); // Redirect to the desired page after saving
+                return [3 /*break*/, 3];
+            case 2:
+                error_2 = _a.sent();
+                console.error('Error saving document to "blacklist" collection:', error_2);
+                res.redirect("/blacklist"); // Redirect back to the blacklist page or show an error message
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); });
+// niet aanraken hierboven
 // Blacklist end
 app.listen(port, function () {
     console.log('Listening on PORT 8080');

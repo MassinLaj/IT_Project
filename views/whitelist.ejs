@@ -34,17 +34,28 @@
             <div class="container mt-5">
               <div class="col-4 mx-auto">
                 <div class="card" onclick="window.location.href=''">
-                  <img
-                    src="media/images/Frodo.png"
-                    class="img-fluid card-img-top"
-                  />
-                  <div class="card-body">
-                    <h1>Frodo Baggins</h1>
-                    <quote
-                      >“Short cuts make delays, but inns make longer
-                      ones.”</quote
-                    >
-                  </div>
+                  <!-- whitelist.ejs -->
+
+                  <!-- Add this section to display the favorite characters -->
+                  <section id="favorites">
+                    <% if (favorites && favorites.length > 0) { %>
+                      <h2>Favorite Characters</h2>
+                      <ul>
+                        <% favorites.forEach((character) => { %>
+                          <li>
+                            <h3><a href="https://lotr.fandom.com/wiki/<%= character.name %>"><%= character.name %></a></h3>
+                            <p><%= character.quote %></p>
+                          </li>
+                        <% }); %>
+                      </ul>
+                      <form action="/download-quotes" method="GET">
+                        <button type="submit">Download Quotes</button>
+                      </form>
+                    <% } else { %>
+                      <p>No favorite characters found.</p>
+                    <% } %>
+                  </section>
+
                 </div>
               </div>
             </div>
