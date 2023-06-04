@@ -314,7 +314,7 @@ app.post('/remove-quote', function (req, res) { return __awaiter(void 0, void 0,
             case 0:
                 quoteIndex = req.body.quoteIndex;
                 username = (_b = (_a = req.session.user) === null || _a === void 0 ? void 0 : _a.name) !== null && _b !== void 0 ? _b : '';
-                return [4 /*yield*/, LoginModel.findById(username).populate('favorites')];
+                return [4 /*yield*/, LoginModel.findOne({ name: username }).populate('favorites')];
             case 1:
                 user = _c.sent();
                 if (!user) {
@@ -325,6 +325,11 @@ app.post('/remove-quote', function (req, res) { return __awaiter(void 0, void 0,
                 if (Array.isArray(favorites) && favorites.length > quoteIndex) {
                     favorites.splice(quoteIndex, 1);
                 }
+                // save to mongoDb 
+                return [4 /*yield*/, user.save()];
+            case 2:
+                // save to mongoDb 
+                _c.sent();
                 // Redirect back to the whitelist page
                 res.redirect('/whitelist');
                 return [2 /*return*/];

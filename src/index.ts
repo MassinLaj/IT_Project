@@ -281,16 +281,15 @@ const  favoritesSchema = new mongoose.Schema({
 const Favorites = mongoose.model('Favorites', favoritesSchema);
 
 //voor het verwijderen van quotes
-
 app.post('/remove-quote', async (req, res) => {
     // Retrieve the quote to be removed from the request body
     const { quoteIndex } = req.body;
-    
+
     // Check if req.session.user is defined, otherwise provide a default value
     const username = req.session.user?.name ?? ''; //maar  name is niet uniek 
-  
+
     // Find the user by their ID and populate the favorites field
-    const user = await LoginModel.findById(username).populate('favorites');
+    const user = await LoginModel.findOne({ name: username }).populate('favorites');
 
     if (!user) {
       throw new Error('User not found');
@@ -298,11 +297,13 @@ app.post('/remove-quote', async (req, res) => {
 
     // Extract the favorites from the user object
     const favorites = user.favorites;
-  
+
     // Remove the quote from the favorites list based on the index
     if (Array.isArray(favorites) && favorites.length > quoteIndex) {
         favorites.splice(quoteIndex, 1); }
-    
+    // save to mongoDb 
+    await user.save();
+
     // Redirect back to the whitelist page
     res.redirect('/whitelist');
   });

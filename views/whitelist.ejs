@@ -49,12 +49,17 @@
                           <li>
                             <h3><a href="https://lotr.fandom.com/wiki/<%= character.name %>"><%= character.name %></a></h3>
                             <p><%= character.quote %></p>
+                            <form class="delete-quote-form" action="/remove-quote" method="POST">
+                              <input type="hidden" name="quoteIndex" value="<%= index %>">
+                              <button type="submit">Delete Quote</button>
+                            </form>
                           </li>
                         <% }); %>
                       </ul>
                       <form action="/download-quotes" method="GET">
                         <button type="submit">Download Quotes</button>
                       </form>
+                    
                     <% } else { %>
                       <p>No favorite characters found.</p>
                     <% } %>
