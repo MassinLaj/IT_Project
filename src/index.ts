@@ -265,7 +265,7 @@ app.get('/whitelist', (_req: Request, res: Response) => {
 
 // Blacklist start
 app.get('/blacklist', (_req: Request, res: Response) => {
-    res.render('blacklist', { user: _req.session.user });
+  res.render('blacklist', { user: _req.session.user });
 });
 
 // niet aanraken
@@ -311,5 +311,7 @@ app.post("/blacklist", async (req, res) => {
 // Blacklist end
 
 app.listen(port, () => {
-    console.log('Listening on PORT 8080');
+  console.log('Listening on PORT 8080');
 });
+
+module.exports = app;

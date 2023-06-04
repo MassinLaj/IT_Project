@@ -344,3 +344,4 @@ app.post("/blacklist", function (req, res) { return __awaiter(void 0, void 0, vo
 app.listen(port, function () {
     console.log('Listening on PORT 8080');
 });
+module.exports = app;
