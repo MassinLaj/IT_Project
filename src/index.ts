@@ -271,18 +271,6 @@ app.get("/suddendeath_endscore", (_req: Request, res: Response) => {
 // Sudden death end score end
 
 
-// Middleware to check if user is logged in
-const checkLoggedIn = (req: Request, res: Response, next: NextFunction) => {
-    if (this.SessionData.loggedIn) {
-      // User is logged in, proceed to the next middleware or route handler
-      next();
-    } else {
-      // User is not logged in, redirect to the login page or show an error message
-      res.redirect('/login'); // Assuming you have a login page at '/login'
-    }
-
-  };
-
   // Definieer een schema voor de opgeslagen personages
 const  favoritesSchema = new mongoose.Schema({
     name: String,

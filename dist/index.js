@@ -294,21 +294,10 @@ app.get("/sudden_death", function (_req, res) {
 });
 // Sudden death end
 // Sudden death end score start
-app.get('/suddendeath_endscore', function (_req, res) {
-    res.render('suddendeath_endscore', { user: _req.session.user });
+app.get("/suddendeath_endscore", function (_req, res) {
+    res.render("suddendeath_endscore", { user: _req.session.user });
 });
 // Sudden death end score end
-// Middleware to check if user is logged in
-var checkLoggedIn = function (req, res, next) {
-    if (req.session.loggedIn) {
-        // User is logged in, proceed to the next middleware or route handler
-        next();
-    }
-    else {
-        // User is not logged in, redirect to the login page or show an error message
-        res.redirect('/login'); // Assuming you have a login page at '/login'
-    }
-};
 // Definieer een schema voor de opgeslagen personages
 var favoritesSchema = new mongoose.Schema({
     name: String,
@@ -317,7 +306,7 @@ var favoritesSchema = new mongoose.Schema({
 // Definieer een model op basis van het schema
 var Favorites = mongoose.model('Favorites', favoritesSchema);
 //voor het verwijderen van quotes
-app.post('/remove-quote', checkLoggedIn, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+app.post('/remove-quote', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var quoteIndex, username, user, favorites;
     var _a, _b;
     return __generator(this, function (_c) {
@@ -345,7 +334,7 @@ app.post('/remove-quote', checkLoggedIn, function (req, res) { return __awaiter(
 //einde verwijderen van quotes
 // Whitelist start
 // Whitelist route with the checkLoggedIn middleware
-app.get('/whitelist', checkLoggedIn, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+app.get('/whitelist', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var username, user, favorites, error_1;
     var _a, _b;
     return __generator(this, function (_c) {
@@ -373,7 +362,7 @@ app.get('/whitelist', checkLoggedIn, function (req, res) { return __awaiter(void
     });
 }); });
 // Whitelist end
-app.get('/download-quotes', checkLoggedIn, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+app.get('/download-quotes', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var username, user;
     var _a, _b;
     return __generator(this, function (_c) {
@@ -424,7 +413,6 @@ var blacklistSchema = new mongoose.Schema({
 // Create a model based on the schema
 var BlacklistModel = mongoose.model("Blacklist", blacklistSchema);
 app.post("/blacklist", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var data, document_1, error_1;
     var data, document_1, error_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -433,7 +421,6 @@ app.post("/blacklist", function (req, res) { return __awaiter(void 0, void 0, vo
                 data = {
                     quote: req.body.hiddeninput,
                     reason: req.body.complaint,
-                    quote: req.body.quoteName
                     // Extract other fields as necessary
                 };
                 document_1 = new BlacklistModel(data);
@@ -446,8 +433,6 @@ app.post("/blacklist", function (req, res) { return __awaiter(void 0, void 0, vo
                 res.redirect("/"); // Redirect to the desired page after saving
                 return [3 /*break*/, 3];
             case 2:
-                error_1 = _a.sent();
-                console.error('Error saving document to "blacklist" collection:', error_1);
                 error_2 = _a.sent();
                 console.error('Error saving document to "blacklist" collection:', error_2);
                 res.redirect("/blacklist"); // Redirect back to the blacklist page or show an error message
@@ -459,6 +444,6 @@ app.post("/blacklist", function (req, res) { return __awaiter(void 0, void 0, vo
 // niet aanraken hierboven
 // Blacklist end
 app.listen(port, function () {
-    console.log("Listening on PORT 8080");
+    console.log('Listening on PORT 8080');
 });
 module.exports = app;
