@@ -22,6 +22,7 @@ interface CustomSessionUser {
 }
 
 const app = express();
+
 const port = process.env.PORT || 8080;
 
 app.use(bodyParser.json());
@@ -282,14 +283,12 @@ const blacklistSchema = new mongoose.Schema({
 
 // Create a model based on the schema
 const BlacklistModel = mongoose.model("Blacklist", blacklistSchema);
-
 app.post("/blacklist", async (req, res) => {
   try {
     // Extract the data from the request body
 
-    console.log("quote" + req.body.quoteName);
     const data = {
-      quote: req.body.quoteName,
+      quote: req.body.hiddeninput,
       reason: req.body.complaint,
 
       // Extract other fields as necessary
@@ -301,10 +300,10 @@ app.post("/blacklist", async (req, res) => {
     await document.save();
 
     console.log('Document saved to "blacklist" collection:', document);
-    // res.redirect("/"); // Redirect to the desired page after saving
+    res.redirect("/"); // Redirect to the desired page after saving
   } catch (error) {
     console.error('Error saving document to "blacklist" collection:', error);
-    // res.redirect("/blacklist"); // Redirect back to the blacklist page or show an error message
+    res.redirect("/blacklist"); // Redirect back to the blacklist page or show an error message
   }
 });
 

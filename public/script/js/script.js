@@ -86,6 +86,7 @@ const characterOption1 = document.getElementById("character-name2");
 const characterOption2 = document.getElementById("character-name3");
 const movieOption1 = document.getElementById("movie-name2");
 const movieOption2 = document.getElementById("movie-name3");
+const hiddenInput = document.getElementById("hiddeninput");
 
 // Retrieve a random quote
 fetch("https://the-one-api.dev/v2/quote", {
@@ -97,10 +98,11 @@ fetch("https://the-one-api.dev/v2/quote", {
   .then((data) => {
     const randomIndex = Math.floor(Math.random() * data.docs.length);
     const quote = data.docs[randomIndex].dialog;
-    // localStorage.setItem("quote", quote);
+    sessionStorage.setItem("quote", quote);
     const characterId = data.docs[randomIndex].character;
     const movieId = data.docs[randomIndex].movie;
     quoteContainer.innerText = quote;
+    hiddenInput.value = quote;
 
     // Retrieve character
     fetch(`https://the-one-api.dev/v2/character/${characterId}`, {
@@ -189,9 +191,3 @@ aantalAntwoorden.textContent = `Total questions:  ${localStorage.getItem(
 localStorage.removeItem("score");
 localStorage.removeItem("roundCount");
 
-// Om quote meetegeven in post request voor blacklist
-// Van h2 kan niet worden gestuurd via req.body by name enkel me input,select of textarea tag
-// daarom deze huidige workaround
-
-// const headingValue = document.getElementById("quoteName").textContent;
-// document.getElementById("hiddeninput").value = headingValue;

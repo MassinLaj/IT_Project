@@ -319,10 +319,8 @@ app.post("/blacklist", function (req, res) { return __awaiter(void 0, void 0, vo
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                // Extract the data from the request body
-                console.log("quote" + req.body.quoteName);
                 data = {
-                    quote: req.body.quoteName,
+                    quote: req.body.hiddeninput,
                     reason: req.body.complaint,
                     // Extract other fields as necessary
                 };
@@ -333,10 +331,12 @@ app.post("/blacklist", function (req, res) { return __awaiter(void 0, void 0, vo
                 // Save the document to MongoDB
                 _a.sent();
                 console.log('Document saved to "blacklist" collection:', document_1);
+                res.redirect("/"); // Redirect to the desired page after saving
                 return [3 /*break*/, 3];
             case 2:
                 error_1 = _a.sent();
                 console.error('Error saving document to "blacklist" collection:', error_1);
+                res.redirect("/blacklist"); // Redirect back to the blacklist page or show an error message
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }
