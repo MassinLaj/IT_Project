@@ -265,12 +265,51 @@ app.get('/whitelist', (_req: Request, res: Response) => {
 
 // Blacklist start
 app.get('/blacklist', (_req: Request, res: Response) => {
-  res.render('blacklist', { user: _req.session.user });
+    res.render('blacklist', { user: _req.session.user });
 });
+
+// niet aanraken
+const blacklistSchema = new mongoose.Schema({
+  // Define the fields for the blacklist collection
+    quote : String,
+    reason: String,
+
+});
+
+// Create a model based on the schema
+const BlacklistModel = mongoose.model("Blacklist", blacklistSchema);
+
+
+app.post("/blacklist", async (req, res) => {
+  try {
+    // Extract the data from the request body
+    
+    
+    const data = {
+        
+        quote : req.body.quoteName,
+        reason: req.body.complaint
+      
+      // Extract other fields as necessary
+    };
+
+    // Create a new document using the BlacklistModel
+    const document = new BlacklistModel(data);
+
+    // Save the document to MongoDB
+    await document.save();
+
+    console.log('Document saved to "blacklist" collection:', document);
+    res.redirect("/"); // Redirect to the desired page after saving
+  } catch (error) {
+    console.error('Error saving document to "blacklist" collection:', error);
+    res.redirect("/blacklist"); // Redirect back to the blacklist page or show an error message
+  }
+});
+
+// niet aanraken hierboven
 // Blacklist end
 
 app.listen(port, () => {
-  console.log('Listening on PORT 8080');
+    console.log('Listening on PORT 8080');
 });
-
-module.exports = app;

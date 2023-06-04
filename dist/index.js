@@ -302,8 +302,45 @@ app.get('/whitelist', function (_req, res) {
 app.get('/blacklist', function (_req, res) {
     res.render('blacklist', { user: _req.session.user });
 });
+// niet aanraken
+var blacklistSchema = new mongoose.Schema({
+    // Define the fields for the blacklist collection
+    quote: String,
+    reason: String,
+});
+// Create a model based on the schema
+var BlacklistModel = mongoose.model("Blacklist", blacklistSchema);
+app.post("/blacklist", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var data, document_1, error_1;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                data = {
+                    quote: req.body.quoteName,
+                    reason: req.body.complaint
+                    // Extract other fields as necessary
+                };
+                document_1 = new BlacklistModel(data);
+                // Save the document to MongoDB
+                return [4 /*yield*/, document_1.save()];
+            case 1:
+                // Save the document to MongoDB
+                _a.sent();
+                console.log('Document saved to "blacklist" collection:', document_1);
+                res.redirect("/"); // Redirect to the desired page after saving
+                return [3 /*break*/, 3];
+            case 2:
+                error_1 = _a.sent();
+                console.error('Error saving document to "blacklist" collection:', error_1);
+                res.redirect("/blacklist"); // Redirect back to the blacklist page or show an error message
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); });
+// niet aanraken hierboven
 // Blacklist end
 app.listen(port, function () {
     console.log('Listening on PORT 8080');
 });
-module.exports = app;
