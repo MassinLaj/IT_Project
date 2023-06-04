@@ -258,9 +258,8 @@ app.get('/sudden_death', (_req: Request, res: Response) => {
 
 // Sudden death end score start
 app.get('/suddendeath_endscore', (_req: Request, res: Response) => {
-    res.render('suddendeath_endscore');
+  res.render('suddendeath_endscore' , { user: _req.session.user });
 });
-  res.render('suddendeath_endscore' , { user: _req.session.user });});
 // Sudden death end score end
 
 // Middleware to check if user is logged in
