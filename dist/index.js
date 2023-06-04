@@ -311,31 +311,43 @@ var favoritesSchema = new mongoose.Schema({
 // Definieer een model op basis van het schema
 var Favorites = mongoose.model('Favorites', favoritesSchema);
 //voor het verwijderen van quotes
-app.post('/remove-quote', checkLoggedIn, function (req, res) {
+app.post('/remove-quote', checkLoggedIn, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var quoteIndex, username, user, favorites;
     var _a, _b;
-    // Retrieve the quote to be removed from the request body
-    var quoteIndex = req.body.quoteIndex;
-    // Retrieve the favorite quotes from the user's session
-    var favorites = (_b = (_a = req.session.user) === null || _a === void 0 ? void 0 : _a.name) !== null && _b !== void 0 ? _b : [];
-    // Remove the quote from the favorites list based on the index
-    if (Array.isArray(favorites) && favorites.length > quoteIndex) {
-        favorites.splice(quoteIndex, 1);
-    }
-    // Redirect back to the whitelist page
-    res.redirect('/whitelist');
-});
+    return __generator(this, function (_c) {
+        switch (_c.label) {
+            case 0:
+                quoteIndex = req.body.quoteIndex;
+                username = (_b = (_a = req.session.user) === null || _a === void 0 ? void 0 : _a.name) !== null && _b !== void 0 ? _b : '';
+                return [4 /*yield*/, LoginModel.findById(username).populate('favorites')];
+            case 1:
+                user = _c.sent();
+                if (!user) {
+                    throw new Error('User not found');
+                }
+                favorites = user.favorites;
+                // Remove the quote from the favorites list based on the index
+                if (Array.isArray(favorites) && favorites.length > quoteIndex) {
+                    favorites.splice(quoteIndex, 1);
+                }
+                // Redirect back to the whitelist page
+                res.redirect('/whitelist');
+                return [2 /*return*/];
+        }
+    });
+}); });
 //einde verwijderen van quotes
 // Whitelist start
 // Whitelist route with the checkLoggedIn middleware
 app.get('/whitelist', checkLoggedIn, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var userId, user, favorites, error_1;
+    var username, user, favorites, error_1;
     var _a, _b;
     return __generator(this, function (_c) {
         switch (_c.label) {
             case 0:
                 _c.trys.push([0, 2, , 3]);
-                userId = (_b = (_a = req.session.user) === null || _a === void 0 ? void 0 : _a.name) !== null && _b !== void 0 ? _b : '';
-                return [4 /*yield*/, LoginModel.findById(userId).populate('favorites')];
+                username = (_b = (_a = req.session.user) === null || _a === void 0 ? void 0 : _a.name) !== null && _b !== void 0 ? _b : '';
+                return [4 /*yield*/, LoginModel.findOne({ name: username }).populate('favorites')];
             case 1:
                 user = _c.sent();
                 if (!user) {
@@ -356,32 +368,39 @@ app.get('/whitelist', checkLoggedIn, function (req, res) { return __awaiter(void
 }); });
 // Whitelist end
 app.get('/download-quotes', checkLoggedIn, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var userId, user, favorites, content;
+    var username, user;
     var _a, _b;
     return __generator(this, function (_c) {
         switch (_c.label) {
             case 0:
-                userId = (_b = (_a = req.session.user) === null || _a === void 0 ? void 0 : _a.name) !== null && _b !== void 0 ? _b : '';
-                return [4 /*yield*/, LoginModel.findById(userId).populate('favorites')];
+                username = (_b = (_a = req.session.user) === null || _a === void 0 ? void 0 : _a.name) !== null && _b !== void 0 ? _b : '';
+                return [4 /*yield*/, LoginModel.find({ name: username }, function (err, docs) {
+                        if (err) {
+                            console.error(err);
+                            return;
+                        }
+                        if (!user) {
+                            throw new Error('User not found');
+                        }
+                        // Extract the favorites from the user object
+                        var favorites = docs.map(function (doc) { return doc.favorites; });
+                        if (!favorites || favorites.length === 0) {
+                            // If no favorite quotes are found, redirect or display an error message
+                            res.redirect('/whitelist');
+                            return;
+                        }
+                        // Generate the content for the text file
+                        var content = favorites.map(function (favorite) {
+                            //  return `${favorite.name}: ${favorite.quote}`;  HIER IS EEN FOUT!
+                        }).join('\n');
+                        // Set the response headers to indicate a text file download
+                        res.setHeader('Content-disposition', 'attachment; filename=quotes.txt');
+                        res.setHeader('Content-type', 'text/plain');
+                        // Send the content as the response
+                        res.send(content);
+                    })];
             case 1:
                 user = _c.sent();
-                if (!user) {
-                    throw new Error('User not found');
-                }
-                favorites = user.favorites;
-                if (!favorites || favorites.length === 0) {
-                    // If no favorite quotes are found, redirect or display an error message
-                    res.redirect('/whitelist');
-                    return [2 /*return*/];
-                }
-                content = favorites.map(function (favorite) {
-                    //  return `${favorite.name}: ${favorite.quote}`;  HIER IS EEN FOUT!
-                }).join('\n');
-                // Set the response headers to indicate a text file download
-                res.setHeader('Content-disposition', 'attachment; filename=quotes.txt');
-                res.setHeader('Content-type', 'text/plain');
-                // Send the content as the response
-                res.send(content);
                 return [2 /*return*/];
         }
     });

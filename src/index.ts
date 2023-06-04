@@ -287,12 +287,22 @@ const Favorites = mongoose.model('Favorites', favoritesSchema);
 
 //voor het verwijderen van quotes
 
-app.post('/remove-quote', checkLoggedIn, (req, res) => {
+app.post('/remove-quote', checkLoggedIn, async (req, res) => {
     // Retrieve the quote to be removed from the request body
     const { quoteIndex } = req.body;
     
-    // Retrieve the favorite quotes from the user's session
-    const favorites = req.session.user?.name ?? [];
+    // Check if req.session.user is defined, otherwise provide a default value
+    const username = req.session.user?.name ?? ''; //maar  name is niet uniek 
+  
+    // Find the user by their ID and populate the favorites field
+    const user = await LoginModel.findById(username).populate('favorites');
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    // Extract the favorites from the user object
+    const favorites = user.favorites;
   
     // Remove the quote from the favorites list based on the index
     if (Array.isArray(favorites) && favorites.length > quoteIndex) {
@@ -310,41 +320,46 @@ app.post('/remove-quote', checkLoggedIn, (req, res) => {
 app.get('/whitelist', checkLoggedIn, async (req: Request, res: Response) => {
     try {
       // Check if req.session.user is defined, otherwise provide a default value
-      const userId = req.session.user?.name ?? ''; //maar  name is niet uniek 
-  
-      // Find the user by their ID and populate the favorites field
-      const user = await LoginModel.findById(userId).populate('favorites');
-  
+      const username = req.session.user?.name ?? '';
+    
+      // Find the user by their name and populate the favorites field
+      const user = await LoginModel.findOne({ name: username }).populate('favorites');
+    
       if (!user) {
         throw new Error('User not found');
       }
-  
+    
       // Extract the favorites from the user object
       const favorites = user.favorites;
-  
+    
       // Pass the favorites to the view
       res.render('whitelist', { user: req.session.user, favorites: favorites });
-    } catch (error:any) {
+    } catch (error: any) {
       console.error('Error retrieving favorites:', error.message);
       res.status(500).send('Error retrieving favorites');
     }
   });
+  
 
 // Whitelist end
 
 app.get('/download-quotes', checkLoggedIn, async (req, res) => {
     // Check if req.session.user is defined, otherwise provide a default value
-    const userId = req.session.user?.name ?? ''; //maar  name is niet uniek 
+    const username = req.session.user?.name ?? ''; //maar  name is niet uniek 
   
     // Find the user by their ID and populate the favorites field
-    const user = await LoginModel.findById(userId).populate('favorites');
+    const user = await LoginModel.find({ name: username }, (err: any, docs: any) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
 
     if (!user) {
       throw new Error('User not found');
     }
 
     // Extract the favorites from the user object
-    const favorites = user.favorites;
+    const favorites = docs.map((doc: { favorites: any; })=> doc.favorites);
 
     if (!favorites || favorites.length === 0) {
       // If no favorite quotes are found, redirect or display an error message
@@ -353,7 +368,7 @@ app.get('/download-quotes', checkLoggedIn, async (req, res) => {
     }
   
     // Generate the content for the text file
-    const content = favorites.map((favorite) => {
+    const content = favorites.map((favorite: any) => {
     //  return `${favorite.name}: ${favorite.quote}`;  HIER IS EEN FOUT!
     }).join('\n');
   
@@ -363,7 +378,7 @@ app.get('/download-quotes', checkLoggedIn, async (req, res) => {
     
     // Send the content as the response
     res.send(content);
-  });
+  }) });
   
 
 // Blacklist start
