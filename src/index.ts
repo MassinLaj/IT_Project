@@ -270,6 +270,7 @@ app.get("/suddendeath_endscore", (_req: Request, res: Response) => {
 });
 // Sudden death end score end
 
+
 // Middleware to check if user is logged in
 const checkLoggedIn = (req: Request, res: Response, next: NextFunction) => {
     if (this.SessionData.loggedIn) {
@@ -293,7 +294,7 @@ const Favorites = mongoose.model('Favorites', favoritesSchema);
 
 //voor het verwijderen van quotes
 
-app.post('/remove-quote', checkLoggedIn, async (req, res) => {
+app.post('/remove-quote', async (req, res) => {
     // Retrieve the quote to be removed from the request body
     const { quoteIndex } = req.body;
     
@@ -324,7 +325,7 @@ app.post('/remove-quote', checkLoggedIn, async (req, res) => {
 
 
 // Whitelist route with the checkLoggedIn middleware
-app.get('/whitelist', checkLoggedIn, async (req: Request, res: Response) => {
+app.get('/whitelist', async (req: Request, res: Response) => {
     try {
       // Check if req.session.user is defined, otherwise provide a default value
       const username = req.session.user?.name ?? '';
@@ -349,7 +350,7 @@ app.get('/whitelist', checkLoggedIn, async (req: Request, res: Response) => {
 
 // Whitelist end
 
-app.get('/download-quotes', checkLoggedIn, async (req, res) => {
+app.get('/download-quotes', async (req, res) => {
     // Check if req.session.user is defined, otherwise provide a default value
     const username = req.session.user?.name ?? ''; //maar  name is niet uniek 
   
