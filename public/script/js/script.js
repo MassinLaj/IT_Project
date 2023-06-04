@@ -169,7 +169,7 @@ async function fetchCharacters() {
     const characters = response.data.docs;
 
     const character1 = document.getElementById('character-name');
-    const quote = document.getElementById('quote-name');
+    const quote = document.getElementById('quoteName');
     const relatedMovie = document.getElementById('related-movie');
 
     await fetchQuote(characters, character1, quote, relatedMovie);
@@ -241,4 +241,11 @@ aantalAntwoorden.textContent = `Total questions:  ${localStorage.getItem("roundC
 localStorage.removeItem('score');
 localStorage.removeItem('roundCount');
 
+
+// Om quote meetegeven in post request voor blacklist
+// Van h2 kan niet worden gestuurd via req.body by name enkel me input,select of textarea tag
+// daarom deze huidige workaround
+
+const headingValue = document.getElementById("quoteName").textContent;
+document.getElementById("hiddeninput").value = headingValue;
 
