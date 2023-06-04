@@ -272,7 +272,7 @@ app.get("/suddendeath_endscore", (_req: Request, res: Response) => {
 
 // Middleware to check if user is logged in
 const checkLoggedIn = (req: Request, res: Response, next: NextFunction) => {
-    if (req.session.loggedIn) {
+    if (this.SessionData.loggedIn) {
       // User is logged in, proceed to the next middleware or route handler
       next();
     } else {
