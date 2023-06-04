@@ -178,16 +178,41 @@ function generateRandomMovieOptions(excludeMovieId) {
     .catch((error) => {
       console.log("Error:", error);
     });
+
 }
 
-const correctAnswersEl = document.querySelector(".circle-subtext1");
-correctAnswersEl.textContent = `Points accumulated:  ${localStorage.getItem(
-  "score"
-)}`;
-const aantalAntwoorden = document.querySelector(".circle-subtext2");
-aantalAntwoorden.textContent = `Total questions:  ${localStorage.getItem(
-  "roundCount"
-)}`;
-localStorage.removeItem("score");
-localStorage.removeItem("roundCount");
+// Generate random movie options
+function generateRandomMovieOptions(excludeMovieId) {
+  fetch(`https://the-one-api.dev/v2/movie?limit=2`, {
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      const options = data.docs
+        .filter((doc) => doc._id !== excludeMovieId)
+        .map((doc) => doc.name);
+      movieOption1.innerHTML = options[0];
+      movieOption2.innerHTML = options[1];
+    })
+    .catch((error) => {
+      console.log("Error:", error);
+    });
+}
 
+
+const correctAnswersEl = document.querySelector('.circle-subtext1');
+correctAnswersEl.textContent = `Points accumulated:  ${localStorage.getItem("score")}`
+const aantalAntwoorden = document.querySelector('.circle-subtext2');
+aantalAntwoorden.textContent = `Total questions:  ${localStorage.getItem("roundCount")}`
+localStorage.removeItem('score');
+localStorage.removeItem('roundCount');
+
+// Om quote meetegeven in post request voor blacklist
+// Van h2 kan niet worden gestuurd via req.body by name enkel me input,select of textarea tag
+// daarom deze huidige workaround
+
+
+const headingValue = document.getElementById("quoteName").textContent;
+document.getElementById("hiddeninput").value = headingValue;

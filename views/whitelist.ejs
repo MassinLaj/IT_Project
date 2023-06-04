@@ -37,6 +37,28 @@
                     <h1 id="chosen-character"></h1>
                     <quote id="chosen-quote"> </quote>
                   </div>
+
+                  <!-- whitelist.ejs -->
+
+                  <!-- Add this section to display the favorite characters -->
+                  <section id="favorites">
+                    <% if (favorites && favorites.length > 0) { %>
+                      <h2>Favorite Characters</h2>
+                      <ul>
+                        <% favorites.forEach((character) => { %>
+                          <li>
+                            <h3><a href="https://lotr.fandom.com/wiki/<%= character.name %>"><%= character.name %></a></h3>
+                            <p><%= character.quote %></p>
+                          </li>
+                        <% }); %>
+                      </ul>
+                      <form action="/download-quotes" method="GET">
+                        <button type="submit">Download Quotes</button>
+                      </form>
+                    <% } else { %>
+                      <p>No favorite characters found.</p>
+                    <% } %>
+                  </section>
                 </div>
               </div>
             </div>

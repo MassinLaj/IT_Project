@@ -1,13 +1,18 @@
-import express, { Request, Response } from "express";
-import bodyParser from "body-parser";
-import * as mongoose from "mongoose";
-import path from "path";
-import bcrypt from "bcrypt";
-import session, { SessionData } from "express-session";
 
-declare module "express-session" {
+import express, { Request, Response, NextFunction } from 'express';
+import bodyParser from 'body-parser';
+import * as mongoose from 'mongoose';
+import path from 'path';
+import bcrypt from 'bcrypt';
+import session, { SessionData } from 'express-session';
+
+
+declare module 'express-session' {
   interface SessionData {
     loggedIn?: boolean;
+    email?: string;
+    password1?: string;
+    password2?: string;
     user?: CustomSessionUser;
   }
 }
@@ -18,7 +23,6 @@ interface CustomSessionUser {
   email?: string;
   password1?: string;
   password2?: string;
-  // Add other properties if necessary
 }
 
 const app = express();
@@ -37,10 +41,12 @@ app.set("view engine", "ejs");
 
 // Database login/register start
 const loginSchema = new mongoose.Schema({
-  name: String,
-  email: String,
-  password1: String,
-  password2: String,
+    name: String,
+    email: String,
+    password1: String,
+    password2: String,
+    favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Favorites' }], // so a person can have multiple favorites character quotes
+
 });
 
 const LoginModel = mongoose.model("login", loginSchema);
@@ -264,21 +270,134 @@ app.get("/suddendeath_endscore", (_req: Request, res: Response) => {
 });
 // Sudden death end score end
 
+// Middleware to check if user is logged in
+const checkLoggedIn = (req: Request, res: Response, next: NextFunction) => {
+    if (req.session.loggedIn) {
+      // User is logged in, proceed to the next middleware or route handler
+      next();
+    } else {
+      // User is not logged in, redirect to the login page or show an error message
+      res.redirect('/login'); // Assuming you have a login page at '/login'
+    }
+
+  };
+
+  // Definieer een schema voor de opgeslagen personages
+const  favoritesSchema = new mongoose.Schema({
+    name: String,
+    quote: String,
+  });
+  
+  // Definieer een model op basis van het schema
+const Favorites = mongoose.model('Favorites', favoritesSchema);
+
+//voor het verwijderen van quotes
+
+app.post('/remove-quote', checkLoggedIn, async (req, res) => {
+    // Retrieve the quote to be removed from the request body
+    const { quoteIndex } = req.body;
+    
+    // Check if req.session.user is defined, otherwise provide a default value
+    const username = req.session.user?.name ?? ''; //maar  name is niet uniek 
+  
+    // Find the user by their ID and populate the favorites field
+    const user = await LoginModel.findById(username).populate('favorites');
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    // Extract the favorites from the user object
+    const favorites = user.favorites;
+  
+    // Remove the quote from the favorites list based on the index
+    if (Array.isArray(favorites) && favorites.length > quoteIndex) {
+        favorites.splice(quoteIndex, 1); }
+    
+    // Redirect back to the whitelist page
+    res.redirect('/whitelist');
+  });
+
+  //einde verwijderen van quotes
+
 // Whitelist start
-app.get("/whitelist", (_req: Request, res: Response) => {
-  res.render("whitelist", { user: _req.session.user });
-});
+
+
+// Whitelist route with the checkLoggedIn middleware
+app.get('/whitelist', checkLoggedIn, async (req: Request, res: Response) => {
+    try {
+      // Check if req.session.user is defined, otherwise provide a default value
+      const username = req.session.user?.name ?? '';
+    
+      // Find the user by their name and populate the favorites field
+      const user = await LoginModel.findOne({ name: username }).populate('favorites');
+    
+      if (!user) {
+        throw new Error('User not found');
+      }
+    
+      // Extract the favorites from the user object
+      const favorites = user.favorites;
+    
+      // Pass the favorites to the view
+      res.render('whitelist', { user: req.session.user, favorites: favorites });
+    } catch (error: any) {
+      console.error('Error retrieving favorites:', error.message);
+      res.status(500).send('Error retrieving favorites');
+    }
+  });
+
 // Whitelist end
+
+app.get('/download-quotes', checkLoggedIn, async (req, res) => {
+    // Check if req.session.user is defined, otherwise provide a default value
+    const username = req.session.user?.name ?? ''; //maar  name is niet uniek 
+  
+    // Find the user by their ID and populate the favorites field
+    const user = await LoginModel.find({ name: username }, (err: any, docs: any) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    // Extract the favorites from the user object
+    const favorites = docs.map((doc: { favorites: any; })=> doc.favorites);
+
+    if (!favorites || favorites.length === 0) {
+      // If no favorite quotes are found, redirect or display an error message
+      res.redirect('/whitelist');
+      return;
+    }
+  
+    // Generate the content for the text file
+    const content = favorites.map((favorite: any) => {
+    //  return `${favorite.name}: ${favorite.quote}`;  HIER IS EEN FOUT!
+    }).join('\n');
+  
+    // Set the response headers to indicate a text file download
+    res.setHeader('Content-disposition', 'attachment; filename=quotes.txt');
+    res.setHeader('Content-type', 'text/plain');
+    
+    // Send the content as the response
+    res.send(content);
+  }) });
+  
 
 // Blacklist start
 app.get("/blacklist", (_req: Request, res: Response) => {
   res.render("blacklist", { user: _req.session.user });
 });
 
+
+// niet aanraken
 const blacklistSchema = new mongoose.Schema({
   // Define the fields for the blacklist collection
-  quote: String,
-  reason: String,
+    quote : String,
+    reason: String,
 });
 
 // Create a model based on the schema
@@ -311,7 +430,10 @@ app.post("/blacklist", async (req, res) => {
 // Blacklist end
 
 app.listen(port, () => {
-  console.log("Listening on PORT 8080");
+
+
+  console.log('Listening on PORT 8080');
+
 });
 
 module.exports = app;
