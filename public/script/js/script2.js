@@ -82,155 +82,104 @@ function resetScore() {
 
 
 
-async function fetchQuote(characters, characterElement, quoteElement, movieElement) {
-  try {
-    const randomIndex = Math.floor(Math.random() * characters.length);
-    const randomCharacter = characters[randomIndex];
+const apiKey = 'Wi4XdwFQG7Esby0JiNZj';
+const quoteContainer = document.getElementById('quote-name');
+const charactersContainer = document.getElementById('character-name');
+const moviesContainer = document.getElementById('related-movie');
+const characterOption1 = document.getElementById('character-name2');
+const characterOption2 = document.getElementById('character-name3');
+const movieOption1 = document.getElementById('movie-name2');
+const movieOption2 = document.getElementById('movie-name3');
 
-    const response = await axios.get(`https://the-one-api.dev/v2/character/${randomCharacter._id}/quote`, {
+// Retrieve a random quote
+fetch('https://the-one-api.dev/v2/quote', {
+  headers: {
+    'Authorization': `Bearer ${apiKey}`
+  }
+})
+  .then(response => response.json())
+  .then(data => {
+    const randomIndex = Math.floor(Math.random() * data.docs.length);
+    const quote = data.docs[randomIndex].dialog;
+    const characterId = data.docs[randomIndex].character;
+    const movieId = data.docs[randomIndex].movie;
+    quoteContainer.innerText = quote;
+
+    // Retrieve character
+    fetch(`https://the-one-api.dev/v2/character/${characterId}`, {
       headers: {
-        Authorization: 'Bearer k43ZUHBw7jA5D0wxGFtS'
+        'Authorization': `Bearer ${apiKey}`
       }
-    });
-    const quotes = response.data.docs;
-
-    if (quotes.length > 0) {
-      const randomQuoteIndex = Math.floor(Math.random() * quotes.length);
-      const randomQuote = quotes[randomQuoteIndex];
-
-      quoteElement.textContent = `${randomQuote.dialog}`;
-      characterElement.textContent = `${randomCharacter.name}`;
-
-      const movieResponse = await axios.get(`https://the-one-api.dev/v2/movie/${randomQuote.movie}`, {
-        headers: {
-          Authorization: 'Bearer k43ZUHBw7jA5D0wxGFtS'
-        }
+    })
+      .then(response => response.json())
+      .then(data => {
+        const character = data.docs[0].name;
+        charactersContainer.innerHTML = character;
+        generateRandomCharacterOptions(characterId);
+      })
+      .catch(error => {
+        console.log('Error:', error);
       });
-      const movie = movieResponse.data.docs[0];
-      movieElement.textContent = `${movie.name}`;
 
-      const character2 = document.getElementById('character-name2');
-      const character3 = document.getElementById('character-name3');
-
-      let randomIndex2 = Math.floor(Math.random() * characters.length);
-      let randomIndex3 = Math.floor(Math.random() * characters.length);
-
-      while (randomIndex2 === randomIndex3) {
-        randomIndex3 = Math.floor(Math.random() * characters.length);
+    // Retrieve movie
+    fetch(`https://the-one-api.dev/v2/movie/${movieId}`, {
+      headers: {
+        'Authorization': `Bearer ${apiKey}`
       }
+    })
+      .then(response => response.json())
+      .then(data => {
+        const movie = data.docs[0].name;
+        moviesContainer.innerHTML = movie;
+        generateRandomMovieOptions(movieId);
+      })
+      .catch(error => {
+        console.log('Error:', error);
+      });
+  })
+  .catch(error => {
+    console.log('Error:', error);
+  });
 
-      const randomCharacter2 = characters[randomIndex2];
-      const randomCharacter3 = characters[randomIndex3];
-
-      character2.textContent = `${randomCharacter2.name}`;
-      character3.textContent = `${randomCharacter3.name}`;
-
-      const relatedMovieId = movieElement.dataset.movieId;
-
-      const movie2 = document.getElementById('movie-name2');
-      const movie3 = document.getElementById('movie-name3');
-
-      let randomMovieIndex2 = Math.floor(Math.random() * movies.length);
-
-      while (movies[randomMovieIndex2]._id === relatedMovieId || movies[randomMovieIndex2]._id === movie3.dataset.movieId) {
-        randomMovieIndex2 = Math.floor(Math.random() * movies.length);
-      }
-
-      const randomMovie2 = movies[randomMovieIndex2];
-
-      let randomMovieIndex3 = Math.floor(Math.random() * movies.length);
-
-      while (movies[randomMovieIndex3]._id === relatedMovieId || movies[randomMovieIndex3]._id === randomMovie2._id) {
-        randomMovieIndex3 = Math.floor(Math.random() * movies.length);
-      }
-
-      const randomMovie3 = movies[randomMovieIndex3];
-
-      movie2.textContent = `${randomMovie2.name}`;
-      movie2.dataset.movieId = randomMovie2._id;
-
-      movie3.textContent = `${randomMovie3.name}`;
-      movie3.dataset.movieId = randomMovie3._id;
-    } else {
-      fetchQuote(characters, characterElement, quoteElement, movieElement);
+// Generate random character options
+function generateRandomCharacterOptions(excludeCharacterId) {
+  fetch(`https://the-one-api.dev/v2/character?limit=2`, {
+    headers: {
+      'Authorization': `Bearer ${apiKey}`
     }
-  } catch (error) {
-    console.log(error);
-  }
+  })
+    .then(response => response.json())
+    .then(data => {
+      const options = data.docs
+        .filter(doc => doc._id !== excludeCharacterId)
+        .map(doc => doc.name);
+      characterOption1.innerHTML = options[0];
+      characterOption2.innerHTML = options[1];
+    })
+    .catch(error => {
+      console.log('Error:', error);
+    });
 }
 
-async function fetchCharacters() {
-  try {
-    const response = await axios.get('https://the-one-api.dev/v2/character', {
-      headers: {
-        Authorization: 'Bearer k43ZUHBw7jA5D0wxGFtS'
-      }
+// Generate random movie options
+function generateRandomMovieOptions(excludeMovieId) {
+  fetch(`https://the-one-api.dev/v2/movie?limit=2`, {
+    headers: {
+      'Authorization': `Bearer ${apiKey}`
+    }
+  })
+    .then(response => response.json())
+    .then(data => {
+      const options = data.docs
+        .filter(doc => doc._id !== excludeMovieId)
+        .map(doc => doc.name);
+      movieOption1.innerHTML = options[0];
+      movieOption2.innerHTML = options[1];
+    })
+    .catch(error => {
+      console.log('Error:', error);
     });
-    const characters = response.data.docs;
-
-    const character1 = document.getElementById('character-name');
-    const quote = document.getElementById('quote-name');
-    const relatedMovie = document.getElementById('related-movie');
-
-    await fetchQuote(characters, character1, quote, relatedMovie);
-
-    const character2 = document.getElementById('character-name2');
-    const character3 = document.getElementById('character-name3');
-
-    let randomIndex2 = Math.floor(Math.random() * characters.length);
-    let randomIndex3 = Math.floor(Math.random() * characters.length);
-
-    while (randomIndex2 === randomIndex3) {
-      randomIndex3 = Math.floor(Math.random() * characters.length);
-    }
-
-    const randomCharacter2 = characters[randomIndex2];
-    const randomCharacter3 = characters[randomIndex3];
-
-    character2.textContent = `${randomCharacter2.name}`;
-    character3.textContent = `${randomCharacter3.name}`;
-
-    const moviesResponse = await axios.get('https://the-one-api.dev/v2/movie', {
-      headers: {
-        Authorization: 'Bearer k43ZUHBw7jA5D0wxGFtS'
-      }
-    });
-    
-    const movies = moviesResponse.data.docs;
-
-    const relatedMovieId = relatedMovie.dataset.movieId;
-
-    const movie2 = document.getElementById('movie-name2');
-    const movie3 = document.getElementById('movie-name3');
-
-    let randomMovieIndex2 = Math.floor(Math.random() * movies.length);
-
-    while (movies[randomMovieIndex2]._id === relatedMovieId || movies[randomMovieIndex2]._id === movie3.dataset.movieId) {
-      randomMovieIndex2 = Math.floor(Math.random() * movies.length);
-    }
-
-    const randomMovie2 = movies[randomMovieIndex2];
-
-    let randomMovieIndex3 = Math.floor(Math.random() * movies.length);
-
-    while (movies[randomMovieIndex3]._id === relatedMovieId || movies[randomMovieIndex3]._id === randomMovie2._id) {
-      randomMovieIndex3 = Math.floor(Math.random() * movies.length);
-    }
-
-    const randomMovie3 = movies[randomMovieIndex3];
-
-    movie2.textContent = `${randomMovie2.name}`;
-    movie2.dataset.movieId = randomMovie2._id;
-
-    movie3.textContent = `${randomMovie3.name}`;
-    movie3.dataset.movieId = randomMovie3._id;
-  } catch (error) {
-    console.log(error);
-  }
 }
-
-
-fetchCharacters();
 
 
 

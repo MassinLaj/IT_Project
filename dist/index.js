@@ -114,7 +114,7 @@ app.get('/register', function (_req, res) {
     res.render('register', { user: _req.session.user });
 });
 app.post('/register', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var name, email, password1, password2, saltRounds, hashedPassword, data, LoginModel_1, result, err_1;
+    var name, email, password1, password2, saltRounds, hashedPassword, data, result, err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -139,8 +139,7 @@ app.post('/register', function (req, res) { return __awaiter(void 0, void 0, voi
                     email: email,
                     password1: hashedPassword,
                 };
-                LoginModel_1 = mongoose.model('login');
-                return [4 /*yield*/, LoginModel_1.create(data)];
+                return [4 /*yield*/, LoginModel.create(data)];
             case 3:
                 result = _a.sent();
                 console.log('Record Inserted Successfully');
@@ -158,10 +157,10 @@ app.post('/register', function (req, res) { return __awaiter(void 0, void 0, voi
 // Register end
 // Login start
 app.get('/login', function (_req, res) {
-    res.render('login', { user: _req.session.user });
+    res.render('login', { user: _req.session.user, error: null });
 });
 app.post('/login', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var email, password, LoginModel_2, user, passwordMatch, err_2;
+    var email, password, user, passwordMatch, error, err_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -170,14 +169,19 @@ app.post('/login', function (req, res) { return __awaiter(void 0, void 0, void 0
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 4, , 5]);
-                LoginModel_2 = mongoose.model('login');
-                return [4 /*yield*/, LoginModel_2.findOne({ email: email })];
+                return [4 /*yield*/, LoginModel.findOne({ email: email })];
             case 2:
                 user = _a.sent();
                 if (!user) {
                     // User not found
                     console.log('Invalid email or password');
-                    res.render('login', { error: 'Invalid email or password', email: '' }); // Render the login page with an error message and cleared email field
+                    res.render('login', { error: 'Invalid email or password', email: '', user: req.session.user });
+                    return [2 /*return*/];
+                }
+                if (!user.password1) {
+                    // Password not found
+                    console.log('Invalid email or password');
+                    res.render('login', { error: 'Invalid email or password', email: '' });
                     return [2 /*return*/];
                 }
                 return [4 /*yield*/, bcrypt_1.default.compare(password, user.password1)];
@@ -186,7 +190,8 @@ app.post('/login', function (req, res) { return __awaiter(void 0, void 0, void 0
                 if (!passwordMatch) {
                     // Password doesn't match
                     console.log('Invalid email or password');
-                    res.render('login', { error: 'Invalid email or password', email: '' }); // Render the login page with an error message and cleared email field
+                    error = 'Invalid email or password';
+                    res.render('login', { error: error, email: '', user: req.session.user });
                     return [2 /*return*/];
                 }
                 // Initialize user object if it doesn't exist
@@ -195,9 +200,6 @@ app.post('/login', function (req, res) { return __awaiter(void 0, void 0, void 0
                     loggedIn: true,
                     email: user.email,
                 };
-                // Update the session object with loggedIn and user properties
-                req.session.loggedIn = true;
-                req.session.user.loggedIn = true; // Set loggedIn property to true
                 console.log('Login successful');
                 // Perform any other necessary actions for a successful login
                 res.redirect('/'); // Redirect the user to the desired page after successful login
@@ -250,7 +252,8 @@ app.post('/contact', function (req, res) {
         message: message,
     });
     // Save the document to MongoDB
-    contact.save()
+    contact
+        .save()
         .then(function () {
         console.log('Contact message saved successfully');
         res.redirect('/'); // Redirect to the homepage or another page after saving
@@ -282,7 +285,6 @@ app.get('/10_round_endscore', function (_req, res) {
 });
 // 10_round_endscore end
 // Sudden death start
-app.use(express_1.default.static(path_1.default.join(__dirname, 'views/js')));
 app.get('/sudden_death', function (_req, res) {
     res.render('sudden_death', { user: _req.session.user });
 });
@@ -451,3 +453,4 @@ app.post("/blacklist", function (req, res) { return __awaiter(void 0, void 0, vo
 app.listen(port, function () {
     console.log('Listening on PORT 8080');
 });
+module.exports = app;

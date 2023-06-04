@@ -130,5 +130,54 @@
       integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
       crossorigin="anonymous"
     ></script>
+
+    <script>
+      // Function to validate the password requirements
+      function validatePassword() {
+        var password = document.getElementById("password1").value;
+        var missingRequirements = [];
+
+        // Check for at least 8 characters
+        if (password.length < 8) {
+          missingRequirements.push("At least 8 characters long");
+        }
+
+        // Check for both capital and normal letters
+        if (!/[a-z]/.test(password) || !/[A-Z]/.test(password)) {
+          missingRequirements.push("Contains capital letters");
+        }
+
+        // Check for special characters
+        if (!/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password)) {
+          missingRequirements.push("Special characters");
+        }
+
+        // Check for numbers
+        if (!/\d/.test(password)) {
+          missingRequirements.push("Numbers");
+        }
+
+        // Display the message if any requirements are missing
+        if (missingRequirements.length > 0) {
+          var message = "Password requirements not met:";
+          missingRequirements.forEach(function (requirement) {
+            message += "\n- " + requirement;
+          });
+          alert(message);
+          return false; // Prevent form submission
+        }
+
+        return true; // Allow form submission
+      }
+
+      // Attach the validation function to the form submission
+      var form = document.querySelector("form");
+      form.addEventListener("submit", function (event) {
+        if (!validatePassword()) {
+          event.preventDefault(); // Prevent form submission if requirements are not met
+        }
+      });
+      
+    </script>
   </body>
 </html>

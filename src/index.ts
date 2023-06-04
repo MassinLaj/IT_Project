@@ -7,23 +7,23 @@ import session, { SessionData } from 'express-session';
 
 
 declare module 'express-session' {
-    interface SessionData {
-      loggedIn?: boolean;
-      user?: CustomSessionUser;
-    }
-  }
-  
-  interface CustomSessionUser {
-    name?: string;
+  interface SessionData {
     loggedIn?: boolean;
     email?: string;
     password1?: string;
     password2?: string;
-
-    // Add other properties if necessary
+    user?: CustomSessionUser;
   }
-  
-  
+}
+
+interface CustomSessionUser {
+  name?: string;
+  loggedIn?: boolean;
+  email?: string;
+  password1?: string;
+  password2?: string;
+}
+
 const app = express();
 const port = process.env.PORT || 8080;
 
@@ -35,7 +35,6 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 
 app.set('port', 3000);
 app.set('views', path.join(__dirname, '..', 'views'));
-
 app.set('view engine', 'ejs');
 
 // Database login/register start
@@ -51,210 +50,209 @@ const loginSchema = new mongoose.Schema({
 const LoginModel = mongoose.model('login', loginSchema);
 
 mongoose
-    .connect('mongodb+srv://oogwavy:Internationaal_95@database.n6kinc2.mongodb.net/Internationaal', {
-        connectTimeoutMS: 5000,
-        socketTimeoutMS: 45000,
-        serverSelectionTimeoutMS: 5000,
-        dbName: 'Internationaal',
-    })
-    .then(() => {
-        console.log('Connected to MongoDB');
-    })
-    .catch((error) => {
-        console.log('Error in Connecting to Database: ', error);
-    });
+  .connect('mongodb+srv://oogwavy:Internationaal_95@database.n6kinc2.mongodb.net/Internationaal', {
+    connectTimeoutMS: 5000,
+    socketTimeoutMS: 45000,
+    serverSelectionTimeoutMS: 5000,
+    dbName: 'Internationaal',
+  })
+  .then(() => {
+    console.log('Connected to MongoDB');
+  })
+  .catch((error) => {
+    console.log('Error in Connecting to Database: ', error);
+  });
 
 // Configure session
 app.use(
-    session({
-        secret: 'k|*.FGu7,R@aBV0WL(y;Xg&dj*L$i7jc&>+q!befp4xh-!2lC9#`M&aT84]oxGq',
-        resave: false,
-        saveUninitialized: false,
-    })
+  session({
+    secret: 'k|*.FGu7,R@aBV0WL(y;Xg&dj*L$i7jc&>+q!befp4xh-!2lC9#`M&aT84]oxGq',
+    resave: false,
+    saveUninitialized: false,
+  })
 );
 
 // Register start
 app.get('/register', (_req: Request, res: Response) => {
-    res.set({
-        'Allow-access-Allow-Origin': '*',
-    });
-    res.render('register', { user: _req.session.user });
+  res.set({
+    'Allow-access-Allow-Origin': '*',
+  });
+  res.render('register', { user: _req.session.user });
 });
 
-
 app.post('/register', async (req, res) => {
-    const name = req.body.name;
-    const email = req.body.email;
-    const password1 = req.body.password1;
-    const password2 = req.body.password2;
+  const name = req.body.name;
+  const email = req.body.email;
+  const password1 = req.body.password1;
+  const password2 = req.body.password2;
 
-    if (password1 !== password2) {
-        // Passwords do not match
-        res.render('register', { error: 'Passwords do not match' }); // Render the registration page with an error message
-        return;
-    }
+  if (password1 !== password2) {
+    // Passwords do not match
+    res.render('register', { error: 'Passwords do not match' }); // Render the registration page with an error message
+    return;
+  }
 
-    try {
-        const saltRounds = 10;
-        const hashedPassword = await bcrypt.hash(password1, saltRounds);
+  try {
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password1, saltRounds);
 
-        const data = {
-            name: name,
-            email: email,
-            password1: hashedPassword,
-        };
+    const data = {
+      name: name,
+      email: email,
+      password1: hashedPassword,
+    };
 
-        const LoginModel = mongoose.model('login');
-        const result = await LoginModel.create(data);
+    const result = await LoginModel.create(data);
 
-        console.log('Record Inserted Successfully');
-        res.redirect('/');
-    } catch (err) {
-        console.error(err);
-        res.render('register', { error: 'An error occurred during registration' }); // Render the registration page with an error message
-    }
+    console.log('Record Inserted Successfully');
+    res.redirect('/');
+  } catch (err) {
+    console.error(err);
+    res.render('register', { error: 'An error occurred during registration' }); // Render the registration page with an error message
+  }
 });
 
 // Register end
 
 // Login start
 app.get('/login', (_req: Request, res: Response) => {
-    res.render('login', { user: _req.session.user });
+  res.render('login', { user: _req.session.user, error: null });
 });
 
 app.post('/login', async (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
-
+  
     try {
-        const LoginModel = mongoose.model('login');
-        const user = await LoginModel.findOne({ email: email });
-        if (!user) {
-            // User not found
-            console.log('Invalid email or password');
-            res.render('login', { error: 'Invalid email or password', email: '' }); // Render the login page with an error message and cleared email field
-            return;
-        }
-
-        const passwordMatch = await bcrypt.compare(password, user.password1);
-
-        if (!passwordMatch) {
-            // Password doesn't match
-            console.log('Invalid email or password');
-            res.render('login', { error: 'Invalid email or password', email: '' }); // Render the login page with an error message and cleared email field
-            return;
-        }
-
-        // Initialize user object if it doesn't exist
-        req.session.user = {
-            name: user.name,
-            loggedIn: true,
-            email: user.email,
-    
-            
-        };
-
-        // Update the session object with loggedIn and user properties
-        req.session.loggedIn = true;
-        req.session.user.loggedIn = true; // Set loggedIn property to true
-
-        console.log('Login successful');
-        // Perform any other necessary actions for a successful login
-
-        res.redirect('/'); // Redirect the user to the desired page after successful login
+      const user = await LoginModel.findOne({ email: email });
+      if (!user) {
+        // User not found
+        console.log('Invalid email or password');
+        res.render('login', { error: 'Invalid email or password', email: '', user: req.session.user });
+        return;
+      }
+  
+      if (!user.password1) {
+        // Password not found
+        console.log('Invalid email or password');
+        res.render('login', { error: 'Invalid email or password', email: '' });
+        return;
+      }
+  
+      const passwordMatch = await bcrypt.compare(password, user.password1);
+  
+      if (!passwordMatch) {
+        // Password doesn't match
+        console.log('Invalid email or password');
+        const error = 'Invalid email or password';
+        res.render('login', { error: error, email: '', user: req.session.user });
+        return;
+      }
+  
+      // Initialize user object if it doesn't exist
+      req.session.user = {
+        name: user.name,
+        loggedIn: true,
+        email: user.email,
+      };
+  
+      console.log('Login successful');
+      // Perform any other necessary actions for a successful login
+  
+      res.redirect('/'); // Redirect the user to the desired page after successful login
     } catch (err) {
-        console.error(err);
-        res.redirect('/login'); // Redirect the user back to the login page or show an error message
+      console.error(err);
+      res.redirect('/login'); // Redirect the user back to the login page or show an error message
     }
-});
+  });
+  
+  
 // Login end
 
 // Logout
 app.get('/logout', (req, res) => {
-    // Destroy the session to remove all session data
-    req.session.destroy((err) => {
-        if (err) {
-            console.error('Error destroying session:', err);
-        } else {
-            console.log('Logout successful');
-        }
-        res.redirect('/'); // Redirect the user to the desired page after logout
-    });
+  // Destroy the session to remove all session data
+  req.session.destroy((err) => {
+    if (err) {
+      console.error('Error destroying session:', err);
+    } else {
+      console.log('Logout successful');
+    }
+    res.redirect('/'); // Redirect the user to the desired page after logout
+  });
 });
 
 // Database login/register end
 
 // Start landing
 app.get('/', (req, res) => {
-    res.render('landingpage', { user: req.session.user });
+  res.render('landingpage', { user: req.session.user });
 });
 // End landing
 
 // Contact start
-
 const contactSchema = new mongoose.Schema({
-    name: String,
-    email: String,
-    message: String,
+  name: String,
+  email: String,
+  message: String,
 });
 
 const ContactModel = mongoose.model('Contact', contactSchema, 'contact');
 app.get('/contact', (_req: Request, res: Response) => {
-    res.render('contact', { user: _req.session.user });
+  res.render('contact', { user: _req.session.user });
 });
 
 app.post('/contact', (req, res) => {
-    const { name, email, message } = req.body;
+  const { name, email, message } = req.body;
 
-    // Create a new document using the ContactModel
-    const contact = new ContactModel({
-        name: name,
-        email: email,
-        message: message,
+  // Create a new document using the ContactModel
+  const contact = new ContactModel({
+    name: name,
+    email: email,
+    message: message,
+  });
+
+  // Save the document to MongoDB
+  contact
+    .save()
+    .then(() => {
+      console.log('Contact message saved successfully');
+      res.redirect('/'); // Redirect to the homepage or another page after saving
+    })
+    .catch((error) => {
+      console.error('Error saving contact message:', error);
+      res.redirect('/contact'); // Redirect back to the contact page or show an error message
     });
-
-    // Save the document to MongoDB
-    contact.save()
-        .then(() => {
-            console.log('Contact message saved successfully');
-            res.redirect('/'); // Redirect to the homepage or another page after saving
-        })
-        .catch((error) => {
-            console.error('Error saving contact message:', error);
-            res.redirect('/contact'); // Redirect back to the contact page or show an error message
-        });
 });
 // Contact end
 
 // About start
 app.get('/about', (_req: Request, res: Response) => {
-    res.render('about', { user: _req.session.user });
+  res.render('about', { user: _req.session.user });
 });
 // About end
 
 // Quiz selection start
 app.get('/quiz_selection', (_req: Request, res: Response) => {
-    res.render('quiz_selection', { user: _req.session.user });
+  res.render('quiz_selection', { user: _req.session.user });
 });
 // Quiz selection end
 
 // 10_round start
 app.get('/10_round', (_req: Request, res: Response) => {
-    res.render('10_round', { user: _req.session.user });
+  res.render('10_round', { user: _req.session.user });
 });
 // 10_round end
 
 // 10_round_endscore start
 app.get('/10_round_endscore', (_req: Request, res: Response) => {
-    res.render('10_round_endscore', { user: _req.session.user });
+  res.render('10_round_endscore', { user: _req.session.user });
 });
 // 10_round_endscore end
 
 // Sudden death start
-app.use(express.static(path.join(__dirname, 'views/js')));
-
 app.get('/sudden_death', (_req: Request, res: Response) => {
-    res.render('sudden_death', { user: _req.session.user });
+  res.render('sudden_death', { user: _req.session.user });
 });
 // Sudden death end
 
@@ -262,6 +260,7 @@ app.get('/sudden_death', (_req: Request, res: Response) => {
 app.get('/suddendeath_endscore', (_req: Request, res: Response) => {
     res.render('suddendeath_endscore');
 });
+  res.render('suddendeath_endscore' , { user: _req.session.user });});
 // Sudden death end score end
 
 // Middleware to check if user is logged in
@@ -339,7 +338,6 @@ app.get('/whitelist', checkLoggedIn, async (req: Request, res: Response) => {
       res.status(500).send('Error retrieving favorites');
     }
   });
-  
 
 // Whitelist end
 
@@ -383,7 +381,7 @@ app.get('/download-quotes', checkLoggedIn, async (req, res) => {
 
 // Blacklist start
 app.get('/blacklist', (_req: Request, res: Response) => {
-    res.render('blacklist', { user: _req.session.user });
+  res.render('blacklist', { user: _req.session.user });
 });
 
 // niet aanraken
@@ -429,6 +427,8 @@ app.post("/blacklist", async (req, res) => {
 // Blacklist end
 
 app.listen(port, () => {
-    console.log('Listening on PORT 8080');
+
+  console.log('Listening on PORT 8080');
 });
 
+module.exports = app;
